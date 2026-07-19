@@ -1,0 +1,26 @@
+calibration:
+  max_samples: 128
+  batch_size: 1
+  max_seq_len: 2048
+  top_r_logits: 256
+  tokens_per_sequence: 128
+  use_all_non_padding_positions: false
+  save_full_logits: true
+  save_full_probs: false
+  manifest_path: data/calibration/calibration_manifest.json
+  holdout_path: data/calibration/calibration_holdout.jsonl
+  require_manifest: true
+  allowed_sources:
+    - c4
+    - wikitext2
+  reject_multiple_choice_prompts: true
+  max_multiple_choice_fraction: 0.05
+  dataset_mix:
+    - source: jsonl
+      path: data/calibration/calibration_mix.jsonl
+      weight: 1.0
+
+ablation:
+  chunk_size_units: 32
+  store_delta_dtype: float32
+  enable_prefix_suffix_replay: false

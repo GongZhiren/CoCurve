@@ -1,0 +1,42 @@
+units:
+  ffn_groups_per_layer: 16
+  attention_group_mode: kv_aligned
+  cost_type: params
+
+matrix:
+  h_storage_dtype: float32
+  symmetrize: true
+  assert_non_negative_diagonal: true
+  min_diag_tolerance: -1.0e-8
+
+solver:
+  prune_ratio: 0.2
+  allow_budget_overshoot: true
+  interaction_mode: signed
+  normalize_by_cost: true
+  # Prevent global greedy selection from collapsing a few low-sensitivity layers.
+  # This keeps pruning distributed enough for downstream LM quality while still
+  # using the same C4-calibrated Taylor objective.
+  max_pruned_cost_fraction_per_layer: 0.30
+  # Never prune the first/last N transformer layers (0 = disabled). Early layers
+  # form core token features and the last layers feed the LM head; protecting a
+  # thin band guards perplexity at negligible budget cost. Chosen by the
+  # solver-config sweep (outputs/diagnostics/.../solver_sweep.json): cap 0.30 +
+  # 2/2 protection gave the lowest proxy WikiText PPL (13.75 vs 17.0 for 0.35/0)
+  # at matched 20% budget and equivalent MC accuracy.
+  protect_first_layers: 2
+  protect_last_layers: 2
+  # interaction_strength (lambda): scales the 2nd-order cross-unit (off-diagonal
+  # Fisher) term. 1.0 = full method (default; best on llama, e.g. 8B/13b). On GQA
+  # models where FFN units are uniform-importance + strongly correlated (qwen:
+  # FFN |corr| 0.18 vs llama 0.07), the interaction term over-dominates selection;
+  # ~0.5 damps it to a refinement and recovers coding/math. Core inter-unit-relation
+  # idea is preserved for any lambda>0; select per model via the proxy sweep.
+  interaction_strength: 1.0
+
+physical_prune:
+  enabled: true
+  save_pruned_model: false
+
+ablation_acceleration:
+  enable_layer_replay: false

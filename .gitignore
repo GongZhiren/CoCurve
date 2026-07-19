@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Model weights & large artifacts (provide locally, see README)
+models/
+data/
+outputs/
+logs/
+*.npy
+*.pt
+*.bin
+*.safetensors
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

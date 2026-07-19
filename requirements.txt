@@ -1,0 +1,9 @@
+torch>=2.2.0
+transformers>=4.42.0
+datasets>=2.20.0
+accelerate>=0.33.0
+numpy>=1.26.0
+scipy>=1.11.0
+PyYAML>=6.0.1
+tqdm>=4.66.0
+huggingface-hub>=0.34.0,<1.0

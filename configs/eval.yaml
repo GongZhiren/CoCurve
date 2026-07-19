@@ -1,0 +1,59 @@
+eval:
+  json_benchmarks:
+    reasoning_core:
+      enabled: true
+      path: data/datasets/reasoning
+      pattern: "*.jsonl"
+    knowledge_core:
+      enabled: true
+      path: data/datasets/knowledge
+      pattern: "*.jsonl"
+    coding_core:
+      enabled: true
+      path: data/datasets/coding
+      pattern: "*.jsonl"
+
+  standard_benchmarks:
+    enabled: true
+    tasks:
+      - wikitext
+      - ptb
+      - c4
+      - arc_challenge
+      - arc_easy
+      - hellaswag
+      - winogrande
+      - piqa
+      - openbookqa
+      - boolq
+      - mmlu
+      - humaneval
+      - mbpp
+      - gsm8k
+    cache_dir: data/eval/hf_cache
+
+  reporting:
+    save_predictions: true
+    save_summary_json: true
+
+  quality_gates:
+    surrogate_subsets: 30
+    surrogate_subset_fraction: 0.25
+    # Draw each surrogate-test subset's size uniformly in this fraction range so
+    # the surrogate spans a wide magnitude band (meaningful Taylor-fidelity test).
+    surrogate_subset_fraction_min: 0.05
+    surrogate_subset_fraction_max: 0.50
+    quality_eval_samples: 16
+    quality_batch_size: 1
+    use_calibration_holdout: true
+    min_corr_threshold: 0.3
+    max_mask_physical_abs_err: 1.0e-3
+
+  json_eval_limits:
+    max_files_per_benchmark: 10
+    max_samples_per_file: 64
+    max_new_tokens: 128
+    max_seq_len: 2048
+    mc_use_loglik: true
+    use_chat_template: false
+    repetition_penalty: 1.1

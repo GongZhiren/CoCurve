@@ -1,0 +1,99 @@
+datasets:
+  curation:
+    principle:
+      - reuse_existing_local_first
+      - download_only_missing
+      - keep_project_local_copy
+    build_script: scripts/prepare_standard_benchmarks.py
+    catalog_report: data/datasets/catalog_report.json
+
+  categories:
+    language_modeling:
+      datasets:
+        - wikitext2
+        - ptb_text_only
+        - c4_sample
+        - redpajama_sample
+    reasoning:
+      datasets:
+        - piqa
+        - hellaswag
+        - winogrande
+        - arc_challenge
+        - arc_easy
+        - gsm8k
+    knowledge:
+      datasets:
+        - mmlu
+    coding_instruction:
+      datasets:
+        - humaneval
+        - mbpp
+
+  project_local:
+    wikitext2:
+      path: data/datasets/language_modeling/wikitext2/test.jsonl
+      split: test
+    ptb_text_only:
+      path: data/datasets/language_modeling/ptb_text_only/test.jsonl
+      split: test
+    gsm8k:
+      path: data/datasets/reasoning/gsm8k/test.jsonl
+      split: test
+    mmlu:
+      path: data/datasets/knowledge/mmlu/test.jsonl
+      split: test
+    humaneval:
+      path: data/datasets/coding/humaneval/test.jsonl
+      split: test
+    mbpp:
+      path: data/datasets/coding/mbpp/test.jsonl
+      split: test
+
+  standard:
+    wikitext:
+      hf_name: wikitext
+      config: wikitext-2-raw-v1
+      split: test
+    ptb_text_only:
+      hf_name: ptb_text_only
+      split: test
+    c4:
+      hf_name: allenai/c4
+      config: en
+      split: validation
+    redpajama:
+      hf_name: togethercomputer/RedPajama-Data-1T-Sample
+      split: train
+    piqa:
+      hf_name: piqa
+      split: validation
+    hellaswag:
+      hf_name: hellaswag
+      split: validation
+    winogrande:
+      hf_name: winogrande
+      config: winogrande_xl
+      split: validation
+    arc_challenge:
+      hf_name: allenai/ai2_arc
+      config: ARC-Challenge
+      split: test
+    arc_easy:
+      hf_name: allenai/ai2_arc
+      config: ARC-Easy
+      split: test
+    gsm8k:
+      hf_name: gsm8k
+      config: main
+      split: test
+    mmlu:
+      hf_name: cais/mmlu
+      config: all
+      split: test
+    humaneval:
+      hf_name: openai_humaneval
+      split: test
+    mbpp:
+      hf_name: mbpp
+      split: test

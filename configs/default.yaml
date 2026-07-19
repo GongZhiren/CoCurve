@@ -1,0 +1,16 @@
+project:
+  name: cocurve_pruning
+  seed: 42
+  output_root: outputs/experiments
+
+run:
+  model_key: llama-3.1-8b
+  run_name: phase1_default
+  copy_config_to_meta: true
+
+includes:
+  model: configs/model.yaml
+  calibration: configs/calibration.yaml
+  pruning: configs/pruning.yaml
+  eval: configs/eval.yaml
+  datasets: configs/datasets.yaml
