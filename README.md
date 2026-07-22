@@ -1,6 +1,6 @@
 # CoCurve: Cross-Module Co-Pruning Curvature for Training-Free Structured LLM Pruning
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-b31b1b.svg)](https://arxiv.org/abs/2607.17568)
 [![Project Page](https://img.shields.io/badge/Project-Page-1a56ad.svg)](https://gongzhiren.github.io/CoCurve-website/)
 [![Tutorial](https://img.shields.io/badge/Tutorial-Walkthrough-2e6fb0.svg)](https://gongzhiren.github.io/CoCurve-website/tutorial.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -124,7 +124,7 @@ python scripts/run_efficiency_eval.py --config configs/default.yaml \
 @article{gong2026cocurve,
   title   = {CoCurve: Cross-Module Co-Pruning Curvature for Training-Free Structured LLM Pruning},
   author  = {Gong, Zhiren and Zeng, Zihao and Wang, Zijie and Wang, Tiantong and Yuen, Chau and Lim, Wei Yang Bryan},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2607.17568},
   year    = {2026}
 }
 ```
