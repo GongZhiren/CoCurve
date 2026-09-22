@@ -142,7 +142,8 @@ def main() -> None:
     ap.add_argument("--mask-run-dir", required=True,
                     help="run dir holding masks/prune_solution.json to realise before training")
     ap.add_argument("--out", required=True, help="destination for the adapter, metadata, and evaluation")
-    ap.add_argument("--tokens", type=int, default=8_000_000)
+    ap.add_argument("--tokens", type=int, default=8_000_000,
+                    help="target token count for --corpus c4 (ignored for the paper's full Alpaca pass)")
     ap.add_argument("--epochs", type=int, default=1,
                     help="passes over the fixed recovery corpus; default 1 preserves the common recipe")
     ap.add_argument("--seq-len", type=int, default=1024)
@@ -250,12 +251,14 @@ def main() -> None:
         if not meta_path.exists():
             meta_path.write_text(json.dumps(dict(
                 model_key=args.model_key, mask_run_dir=args.mask_run_dir,
-                tokens=args.tokens, seq_len=args.seq_len, rank=args.rank,
+                tokens=None, requested_c4_tokens=(args.tokens if args.corpus == "c4" else None),
+                seq_len=args.seq_len, rank=args.rank,
                 alpha=args.alpha, lr=args.lr, corpus=args.corpus,
                 params_before=n0, params_after=n1,
                 removed_fraction=removed_fraction,
                 mask_realization="runtime" if args.runtime_mask else "physical",
                 eval_tasks=eval_tasks, resumed_evaluation=True,
+                training_provenance="unavailable: adapter-side recovery metadata was missing",
                 status="evaluation_pending"), indent=1))
         _evaluate_in_process(merged, tok, cfg, out, eval_tasks)
         meta = json.loads(meta_path.read_text())
@@ -345,8 +348,11 @@ def main() -> None:
     if args.save_merged:
         merged.save_pretrained(out); tok.save_pretrained(out)
     meta_path = out / "recovery_meta.json"
+    actual_training_tokens = int(data.numel()) * args.epochs
     meta = dict(
-        model_key=args.model_key, mask_run_dir=args.mask_run_dir, tokens=args.tokens,
+        model_key=args.model_key, mask_run_dir=args.mask_run_dir,
+        tokens=actual_training_tokens,
+        requested_c4_tokens=args.tokens if args.corpus == "c4" else None,
         epochs=args.epochs, effective_training_tokens=int(data.numel()) * args.epochs,
         seq_len=args.seq_len, rank=args.rank, alpha=args.alpha, lr=args.lr,
         steps=step, corpus=args.corpus, params_before=n0, params_after=n1,

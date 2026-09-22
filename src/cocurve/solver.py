@@ -18,13 +18,10 @@ def greedy_budget_prune(
     protected_layers: Set[int] | None = None,
     interaction_strength: float = 1.0,
 ) -> PruneResult:
-    # interaction_strength (lambda) scales the second-order CROSS-unit term (the
-    # off-diagonal Fisher) relative to each unit's own curvature. 1.0 = our full
-    # method (default; best on llama, where unit importance is well-differentiated).
-    # On architectures where importance is uniform AND units are strongly
-    # correlated (e.g. qwen GQA: FFN |corr| 0.18 vs llama 0.07), the interaction
-    # term over-dominates selection; a value <1 damps it back to a refinement.
-    # The core idea (inter-unit relations) is preserved for any lambda>0.
+    # interaction_strength (lambda) scales the signed off-diagonal term relative
+    # to each unit's diagonal curvature.  The publication path selects lambda by
+    # held-out teacher KL; lambda=0 is the diagonal endpoint and lambda=1 uses the
+    # unscaled Fisher--Gram cross term.
     m = h.shape[0]
     protected: Set[int] = set(int(x) for x in protected_layers) if protected_layers else set()
     total_cost = float(costs.sum())

@@ -6,7 +6,9 @@ from cocurve.pipeline import CoCurvePipeline
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Apply physical pruning based on solved mask.")
+    parser = argparse.ArgumentParser(
+        description="Materialize a solved mask by zeroing its corresponding weight slices."
+    )
     parser.add_argument("--config", required=True, help="Path to default config yaml")
     parser.add_argument("--model-key", default=None, help="Optional model key override")
     parser.add_argument("--run-dir", default=None, help="Resume or write to a fixed run directory")

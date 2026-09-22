@@ -22,7 +22,9 @@ from cocurve.units import build_unit_registry, unit_cost_vector
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Measure inference efficiency for full, masked, or physically-zeroed models.")
+    parser = argparse.ArgumentParser(
+        description="Measure full, runtime-masked, zeroed, or structurally sliced models."
+    )
     parser.add_argument("--config", default="configs/default.yaml")
     parser.add_argument("--model-key", default=None)
     parser.add_argument("--run-dir", required=True)
@@ -33,12 +35,13 @@ def parse_args() -> argparse.Namespace:
         default="full",
         help="physical_slice = true structural removal (smaller matrices, real speedup).",
     )
-    parser.add_argument("--num-prompts", type=int, default=16)
+    # Defaults reproduce the paper's isolated-A100 bf16 timing protocol.
+    parser.add_argument("--num-prompts", type=int, default=32)
     parser.add_argument("--max-seq-len", type=int, default=2048)
-    parser.add_argument("--generate-prompts", type=int, default=8)
-    parser.add_argument("--max-new-tokens", type=int, default=64)
+    parser.add_argument("--generate-prompts", type=int, default=16)
+    parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--warmup", type=int, default=2)
-    parser.add_argument("--repeat", type=int, default=5)
+    parser.add_argument("--repeat", type=int, default=7)
     return parser.parse_args()
 
 

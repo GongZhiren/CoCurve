@@ -255,11 +255,23 @@ python scripts/run_lora_recovery.py \
 python scripts/run_efficiency_eval.py \
   --config $CFG --model-key llama-3.1-8b-instruct \
   --run-dir $RUN/efficiency --mask-run-dir $RUN/selection \
-  --mode physical_slice
+  --mode physical_slice \
+  --num-prompts 32 --generate-prompts 16 \
+  --max-new-tokens 128 --repeat 7
 ```
 
 Dense and sliced efficiency runs must use the same isolated GPU, software
 stack, sequence length, batch, warm-up, and repeat count.
+
+The paper's sliced bf16/INT8/NF4 deployment cells use the same fixed mask:
+
+```bash
+python scripts/run_deployment_eval.py \
+  --config $CFG --model-key llama-3.1-8b-instruct \
+  --structure pruned --precision nf4 \
+  --mask artifacts/paper-v1/llm/llama-3.1-8b-instruct/r30/masks/prune_solution.json \
+  --output $RUN/deployment-r30-nf4.json
+```
 
 </details>
 
@@ -293,6 +305,16 @@ python scripts/run_vlm.py \
   artifacts/paper-v1/vlm/qwen2.5-vl-7b/matrices \
   outputs/qwen25vl/released-r30.json --ratio 0.30 \
   --mask artifacts/paper-v1/vlm/qwen2.5-vl-7b/r30/masks/prune_solution.json
+```
+
+The VLM systems measurements use true two-tower slicing and validate the
+sliced realization against the corresponding runtime mask before timing:
+
+```bash
+python scripts/run_vlm_efficiency.py \
+  --model-id Qwen/Qwen2.5-VL-7B-Instruct --mode physical_slice \
+  --mask artifacts/paper-v1/vlm/qwen2.5-vl-7b/r30/masks/prune_solution.json \
+  --output outputs/qwen25vl/efficiency-r30.json
 ```
 
 </details>

@@ -102,7 +102,9 @@ mask.
 
 ## Efficiency
 
-Use `run_efficiency_eval.py --mode physical_slice`. Reported latency,
+Use `run_efficiency_eval.py --mode physical_slice` for the bf16 LLM sweep,
+`run_deployment_eval.py` for the sliced bf16/INT8/NF4 cells, and
+`run_vlm_efficiency.py` for the two-tower VLM measurements. Reported latency,
 throughput, and peak memory require an isolated GPU. Dense and pruned runs must
 use the same GPU model, software environment, prompts, sequence length, batch,
 warm-up count, and repeat count. Runtime masks and zeroed tensors do not measure
