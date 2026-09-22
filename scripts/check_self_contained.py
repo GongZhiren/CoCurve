@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import re
 from pathlib import Path
 from typing import Any
 
@@ -27,12 +28,6 @@ def main() -> None:
 
     root = Path(args.project_root).resolve()
     cfg_dir = root / "configs"
-    allow_keys = {
-        "models.llama-3.1-8b.path",
-        "models.llama-2-13b.path",
-        "models.qwen2.5-7b.path",
-        "models.mixtral-8x7b.path",
-    }
     issues = []
 
     for cfg_file in sorted(cfg_dir.glob("*.yaml")):
@@ -40,7 +35,7 @@ def main() -> None:
         for k, v in walk(data):
             if not isinstance(v, str):
                 continue
-            if v.startswith("/") and k not in allow_keys:
+            if v.startswith("/"):
                 issues.append((cfg_file.name, k, v))
 
     if issues:
@@ -49,7 +44,31 @@ def main() -> None:
             print(f"  {f} :: {k} = {v}")
         raise SystemExit(1)
 
-    print("Self-contained check passed: no disallowed absolute paths.")
+    private_patterns = {
+        "private filesystem path": re.compile(r"/(?:scratch|home)/[A-Za-z0-9_.-]+/"),
+        "Overleaf token": re.compile(r"\bolp_[A-Za-z0-9]+"),
+        "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----"),
+        "literal IPv4 address": re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"),
+    }
+    text_suffixes = {".py", ".md", ".yaml", ".yml", ".json", ".toml", ".cff", ".txt"}
+    for path in root.rglob("*"):
+        if not path.is_file() or ".git" in path.parts or path.suffix.lower() not in text_suffixes:
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for label, pattern in private_patterns.items():
+            if pattern.search(content):
+                issues.append((str(path.relative_to(root)), label, "redacted"))
+
+    if issues:
+        print("Release hygiene failures:")
+        for filename, key, value in issues:
+            print(f"  {filename} :: {key} = {value}")
+        raise SystemExit(1)
+
+    print("Release hygiene passed: portable configs and no private paths, hosts, or tokens.")
 
 
 if __name__ == "__main__":

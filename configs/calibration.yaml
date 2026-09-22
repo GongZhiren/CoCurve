@@ -12,7 +12,6 @@ calibration:
   require_manifest: true
   allowed_sources:
     - c4
-    - wikitext2
   reject_multiple_choice_prompts: true
   max_multiple_choice_fraction: 0.05
   dataset_mix:

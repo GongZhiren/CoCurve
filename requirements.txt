@@ -7,3 +7,5 @@ scipy>=1.11.0
 PyYAML>=6.0.1
 tqdm>=4.66.0
 huggingface-hub>=0.34.0,<1.0
+peft>=0.13.0
+safetensors>=0.4.0

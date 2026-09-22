@@ -1,50 +1,43 @@
 models:
-  llama-3.1-8b:
-    path: models/llama-3.1-8b
-    family: llama
-    torch_dtype: bfloat16
-    device_map: auto
-  llama-3.1-8b-instruct:
-    path: models/llama-3.1-8b-instruct
-    family: llama
-    torch_dtype: bfloat16
-    device_map: auto
-  qwen2.5-7b:
-    path: models/qwen2.5-7b
-    family: qwen
-    torch_dtype: bfloat16
-    device_map: auto
-  mistral-7b:
-    path: models/mistral-7b
-    family: llama
-    torch_dtype: bfloat16
-    device_map: auto
   llama-3.2-3b:
-    path: models/llama-3.2-3b
-    family: llama
-    torch_dtype: bfloat16
-    device_map: auto
-  yi-1.5-9b:
-    path: models/yi-1.5-9b
+    hf_id: meta-llama/Llama-3.2-3B
     family: llama
     torch_dtype: bfloat16
     device_map: auto
   falcon3-7b:
-    path: models/falcon3-7b
+    hf_id: tiiuae/Falcon3-7B-Base
     family: llama
     torch_dtype: bfloat16
     device_map: auto
-  # Larger scaling-study model; same Llama-style architecture, no pipeline changes.
+  llama-3.1-8b-instruct:
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+    family: llama
+    torch_dtype: bfloat16
+    device_map: auto
   mistral-nemo-12b:
-    path: models/mistral-nemo-12b
+    hf_id: mistralai/Mistral-Nemo-Base-2407
     family: llama
     torch_dtype: bfloat16
     device_map: auto
+  mistral-small-24b:
+    hf_id: mistralai/Mistral-Small-24B-Base-2501
+    family: llama
+    torch_dtype: bfloat16
+    device_map: auto
+    tokenizer_kwargs:
+      fix_mistral_regex: true
+  llama-3.1-70b-instruct:
+    hf_id: meta-llama/Llama-3.1-70B-Instruct
+    family: llama
+    torch_dtype: bfloat16
+    device_map: auto
+    load_in_4bit: true
+    attn_implementation: sdpa
 
 tokenizer:
   trust_remote_code: true
   use_fast: true
 
 runtime:
-  max_seq_len: 1024
+  max_seq_len: 2048
   attn_implementation: eager

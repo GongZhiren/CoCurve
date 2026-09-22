@@ -8,7 +8,8 @@ Logical structure:
 
 from typing import Any
 
-__all__ = ["CoCurvePipeline"]
+__all__ = ["CoCurvePipeline", "__version__"]
+__version__ = "1.0.0"
 
 
 def __getattr__(name: str) -> Any:

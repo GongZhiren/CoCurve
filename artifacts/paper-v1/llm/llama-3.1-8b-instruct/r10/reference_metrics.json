@@ -1,0 +1,93 @@
+{
+  "arc_challenge": {
+    "accuracy_norm": 0.48976109215017066,
+    "accuracy_raw": 0.45563139931740615,
+    "elapsed_sec": 430.17907762527466,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 1172,
+    "task": "arc_challenge"
+  },
+  "arc_easy": {
+    "accuracy_norm": 0.7567340067340067,
+    "accuracy_raw": 0.7777777777777778,
+    "elapsed_sec": 530.4460346698761,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 2376,
+    "task": "arc_easy"
+  },
+  "boolq": {
+    "accuracy_norm": 0.8275229357798165,
+    "accuracy_raw": 0.8275229357798165,
+    "elapsed_sec": 325.4669601917267,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 3270,
+    "task": "boolq"
+  },
+  "c4": {
+    "elapsed_sec": 457.4476900100708,
+    "metric": "perplexity",
+    "nll": 603865.6231262684,
+    "num_tokens": 229527,
+    "ppl": 13.886445764201222,
+    "task": "c4",
+    "token_limit": null
+  },
+  "hellaswag": {
+    "accuracy_norm": 0.7402907787293368,
+    "accuracy_raw": 0.5424218283210516,
+    "elapsed_sec": 1157.1421978473663,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 10042,
+    "task": "hellaswag"
+  },
+  "mmlu": {
+    "accuracy_norm": 0.43284432417034613,
+    "accuracy_raw": 0.40820395954992167,
+    "elapsed_sec": 3440.3820662498474,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 14042,
+    "task": "mmlu"
+  },
+  "openbookqa": {
+    "accuracy_norm": 0.456,
+    "accuracy_raw": 0.344,
+    "elapsed_sec": 52.941386461257935,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 500,
+    "task": "openbookqa"
+  },
+  "piqa": {
+    "accuracy_norm": 0.8019586507072906,
+    "accuracy_raw": 0.7878128400435256,
+    "elapsed_sec": 99.15461468696594,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 1838,
+    "task": "piqa"
+  },
+  "ptb": {
+    "elapsed_sec": 195.59519243240356,
+    "metric": "perplexity",
+    "nll": 298382.6083538532,
+    "num_tokens": 98914,
+    "ppl": 20.42145797960773,
+    "task": "ptb",
+    "token_limit": null
+  },
+  "wikitext": {
+    "elapsed_sec": 560.5063827037811,
+    "metric": "perplexity",
+    "nll": 630184.5070128441,
+    "num_tokens": 288936,
+    "ppl": 8.85561950302822,
+    "task": "wikitext",
+    "token_limit": null
+  },
+  "winogrande": {
+    "accuracy_norm": 0.6464088397790055,
+    "accuracy_raw": 0.6566692975532754,
+    "elapsed_sec": 68.69117283821106,
+    "metric": "multiple_choice_loglik",
+    "num_samples": 1267,
+    "task": "winogrande"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "accuracy": {
+    "ai2d": 55.3,
+    "mmbench": 68.1,
+    "mme": 70.1,
+    "mmstar": 41.5,
+    "pope": 90.7,
+    "scienceqa": 59.5,
+    "seedbench": 59.7
+  },
+  "caption_ppl": 19.8788,
+  "evaluation_items_per_task": 1000,
+  "heldout_kl": 0.485014,
+  "mean_accuracy": 63.56
+}

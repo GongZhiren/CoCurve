@@ -1,0 +1,13 @@
+# Exact environment used for the public smoke tests. GPU kernels and model
+# checkpoints remain platform-specific, so the main requirements stay ranged.
+torch==2.8.0
+transformers==4.57.1
+datasets==4.0.0
+accelerate==1.10.1
+numpy==2.2.6
+scipy==1.16.1
+PyYAML==6.0.2
+tqdm==4.67.1
+huggingface-hub==0.34.4
+peft==0.17.1
+safetensors==0.6.2

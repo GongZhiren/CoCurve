@@ -15,6 +15,7 @@ data/
 outputs/
 logs/
 *.npy
+!artifacts/**/*.npy
 *.pt
 *.bin
 *.safetensors

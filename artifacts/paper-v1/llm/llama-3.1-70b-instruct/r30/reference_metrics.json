@@ -1,0 +1,29 @@
+{
+  "c4": {
+    "elapsed_sec": 686.0313076972961,
+    "metric": "perplexity",
+    "nll": 653527.660419941,
+    "num_tokens": 229527,
+    "ppl": 17.240824759210486,
+    "task": "c4",
+    "token_limit": null
+  },
+  "ptb": {
+    "elapsed_sec": 293.6023123264313,
+    "metric": "perplexity",
+    "nll": 257986.80699801445,
+    "num_tokens": 98914,
+    "ppl": 13.574500186453978,
+    "task": "ptb",
+    "token_limit": null
+  },
+  "wikitext": {
+    "elapsed_sec": 866.3294253349304,
+    "metric": "perplexity",
+    "nll": 614458.4035930634,
+    "num_tokens": 288936,
+    "ppl": 8.386511099581739,
+    "task": "wikitext",
+    "token_limit": null
+  }
+}

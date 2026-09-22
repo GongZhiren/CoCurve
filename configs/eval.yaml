@@ -27,9 +27,10 @@ eval:
       - openbookqa
       - boolq
       - mmlu
-      - humaneval
-      - mbpp
-      - gsm8k
+      - commonsense_qa
+      - race
+      - race_high
+      - quail
     cache_dir: data/eval/hf_cache
 
   reporting:

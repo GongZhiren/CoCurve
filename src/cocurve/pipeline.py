@@ -116,7 +116,7 @@ class CoCurvePipeline:
 
         meta = {
             "model_key": ctx.model_key,
-            "model_path": model_cfg["path"],
+            "model_path": model_cfg.get("path") or model_cfg.get("hf_id"),
             "run_name": ctx.run_name,
             "num_layers": bundle.num_layers if bundle is not None else None,
             "num_heads": bundle.num_heads if bundle is not None else None,

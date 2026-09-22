@@ -39,22 +39,7 @@ def register_runtime_masks(
     units_by_layer: Dict[int, List[UnitSpec]],
     ffn_by_layer: Dict[int, List[UnitSpec]],
     selected_unit_ids: Set[int],
-    comp_means: Optional[Dict[str, Dict[int, torch.Tensor]]] = None,
-    ffn_gains: Optional[Dict[int, float]] = None,
 ) -> RuntimeMaskState:
-    # ffn_gains (optional): edge-derived COUPLING-AWARE compensation. Maps a KEPT FFN
-    # unit_id -> multiplicative gain (1+c_v) applied to its channels, so surviving units
-    # are rescaled to absorb the removed units' output contribution (gains solved in
-    # closed form from the same edge matrix H; see scripts/compute_edge_compensation.py).
-    # Default None leaves kept units at gain 1.0 (clean selection-only behaviour).
-    # comp_means (optional): FLAP-style mean/bias compensation. When provided,
-    # pruned channels are replaced by their calibration mean instead of zero, i.e.
-    #   out = W(h*mask + mean*(1-mask)) = W(h_kept) + W*mean_removed (a constant bias).
-    # This preserves the removed channels' EXPECTED contribution (only their
-    # fluctuation is dropped). Closed-form, label-free, no fine-tuning. When None,
-    # behaviour is identical to plain zeroing (the clean default).
-    comp_ffn = (comp_means or {}).get("ffn", {})
-    comp_attn = (comp_means or {}).get("attn", {})
     hooks: List[torch.utils.hooks.RemovableHandle] = []
     layers = layer_modules(bundle)
 
@@ -66,9 +51,7 @@ def register_runtime_masks(
             projs = attention_projections(attn) if attn is not None else {}
             o_proj = projs.get("o_proj")
             if o_proj is not None:
-                attn_mean = comp_attn.get(layer_idx)
-
-                def make_o_proj_prehook(mask: torch.Tensor, mean: Optional[torch.Tensor]):
+                def make_o_proj_prehook(mask: torch.Tensor):
                     def hook(_module: nn.Module, inputs):
                         if not inputs:
                             return inputs
@@ -82,16 +65,12 @@ def register_runtime_masks(
                         reshaped = hidden.view(bsz, seq, bundle.num_heads, bundle.head_dim)
                         mask_local = mask.to(device=hidden.device, dtype=hidden.dtype).view(1, 1, bundle.num_heads, 1)
                         masked = reshaped * mask_local
-                        if mean is not None:
-                            mean_local = mean.to(device=hidden.device, dtype=hidden.dtype).view(
-                                1, 1, bundle.num_heads, bundle.head_dim)
-                            masked = masked + mean_local * (1.0 - mask_local)
                         masked = masked.reshape(bsz, seq, width)
                         return (masked,) + tuple(inputs[1:])
 
                     return hook
 
-                hooks.append(o_proj.register_forward_pre_hook(make_o_proj_prehook(keep_mask, attn_mean)))
+                hooks.append(o_proj.register_forward_pre_hook(make_o_proj_prehook(keep_mask)))
 
         ffn_specs = ffn_by_layer.get(layer_idx, [])
         if ffn_specs:
@@ -103,15 +82,11 @@ def register_runtime_masks(
                     size = spec.metadata["group_size"]
                     if spec.unit_id not in selected_unit_ids:
                         channel_mask[start : start + size] = 0.0
-                    elif ffn_gains is not None and spec.unit_id in ffn_gains:
-                        channel_mask[start : start + size] = float(ffn_gains[spec.unit_id])
 
                 projections = mlp_projections(mlp)
                 down_proj = projections.get("down_proj") or projections.get("w2") or projections.get("c_proj")
                 if down_proj is not None:
-                    ffn_mean = comp_ffn.get(layer_idx)
-
-                    def make_mlp_prehook(mask: torch.Tensor, mean: Optional[torch.Tensor]):
+                    def make_mlp_prehook(mask: torch.Tensor):
                         def hook(_module: nn.Module, inputs):
                             if not inputs:
                                 return inputs
@@ -122,14 +97,11 @@ def register_runtime_masks(
                                 return inputs
                             mask_local = mask.to(device=hidden.device, dtype=hidden.dtype).view(1, 1, -1)
                             masked = hidden * mask_local
-                            if mean is not None:
-                                mean_local = mean.to(device=hidden.device, dtype=hidden.dtype).view(1, 1, -1)
-                                masked = masked + mean_local * (1.0 - mask_local)
                             return (masked,) + tuple(inputs[1:])
 
                         return hook
 
-                    hooks.append(down_proj.register_forward_pre_hook(make_mlp_prehook(channel_mask, ffn_mean)))
+                    hooks.append(down_proj.register_forward_pre_hook(make_mlp_prehook(channel_mask)))
     return RuntimeMaskState(hooks=hooks)
 
 

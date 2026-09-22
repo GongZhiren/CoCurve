@@ -3,7 +3,7 @@
 
 Usage:
   PYTHONPATH=src python scripts/score_coding_pass_at_1.py \
-      --run-dir outputs/experiments/llama-3.1-8b/<run> [--timeout 10] [--workers 8]
+      --run-dir outputs/experiments/llama-3.1-8b-instruct/<run> [--timeout 10] [--workers 8]
 
 Reads <run>/standard_eval/{humaneval,mbpp}_generations.json, executes the unit
 tests in isolated subprocesses, writes {task}_pass_at_1.json, and updates the

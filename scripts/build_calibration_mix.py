@@ -28,14 +28,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--holdout-output", default="data/calibration/calibration_holdout.jsonl")
     parser.add_argument("--manifest", default="data/calibration/calibration_manifest.json")
     parser.add_argument("--source", default="c4", choices=sorted(SOURCE_SPECS))
-    parser.add_argument("--fallback-source", default="wikitext2", choices=sorted(SOURCE_SPECS))
+    parser.add_argument("--fallback-source", default="c4", choices=sorted(SOURCE_SPECS))
     parser.add_argument("--num-samples", type=int, default=128)
-    parser.add_argument("--holdout-samples", type=int, default=32)
+    parser.add_argument("--holdout-samples", type=int, default=16)
     parser.add_argument("--seq-len", type=int, default=2048)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--shuffle-buffer", type=int, default=10000)
     parser.add_argument("--min-words", type=int, default=32)
-    parser.add_argument("--tokenizer", default="models/llama-3.1-8b")
+    parser.add_argument("--tokenizer", default="meta-llama/Llama-3.1-8B-Instruct")
     parser.add_argument("--local-files-only", action="store_true", help="Only load the tokenizer from local files.")
     parser.add_argument("--no-fallback", action="store_true", help="Fail instead of falling back if the primary source is unavailable.")
     return parser.parse_args()
@@ -205,14 +205,16 @@ def main() -> None:
     output = root / args.output
     holdout_output = root / args.holdout_output
     manifest_path = root / args.manifest
-    tokenizer_path = root / args.tokenizer
+    local_tokenizer = root / args.tokenizer
+    tokenizer_source = str(local_tokenizer) if local_tokenizer.exists() else args.tokenizer
 
     tokenizer = None
     tokenizer_error = None
     try:
-        tokenizer = load_tokenizer(tokenizer_path, local_files_only=bool(args.local_files_only))
+        tokenizer = load_tokenizer(Path(tokenizer_source), local_files_only=bool(args.local_files_only))
     except Exception as exc:
         tokenizer_error = str(exc)
+        raise RuntimeError(f"tokenizer is required for exact token-packed calibration: {exc}") from exc
 
     attempted: List[Dict[str, Any]] = []
     build_error: Optional[Exception] = None
@@ -241,7 +243,7 @@ def main() -> None:
         "holdout_samples": holdout_count,
         "seq_len": int(args.seq_len),
         "seed": int(args.seed),
-        "tokenizer": str(tokenizer_path.relative_to(root)) if tokenizer_path.is_relative_to(root) else str(tokenizer_path),
+        "tokenizer": tokenizer_source,
         "tokenizer_loaded": tokenizer is not None,
         "tokenizer_error": tokenizer_error,
         "policy": {

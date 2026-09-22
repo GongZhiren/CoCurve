@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: "CoCurve: Cross-Module Co-Pruning Curvature for Structured LLM Pruning"
+message: "If you use CoCurve, please cite the paper."
+type: software
+license: MIT
+authors:
+  - family-names: Gong
+    given-names: Zhiren
+  - family-names: Zeng
+    given-names: Zihao
+  - family-names: Wang
+    given-names: Tiantong
+  - family-names: Anada
+    given-names: Honoka
+  - family-names: Wang
+    given-names: Yixin
+  - family-names: Wang
+    given-names: Zijie
+  - family-names: Xiao
+    given-names: Ming
+  - family-names: Yuen
+    given-names: Chau
+  - family-names: Lim
+    given-names: Wei Yang Bryan
+repository-code: "https://github.com/GongZhiren/CoCurve"
+url: "https://gongzhiren.github.io/CoCurve-website/"
+date-released: 2026-09-22

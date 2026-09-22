@@ -1,0 +1,663 @@
+{
+  "description": "Publication-locked CoCurve matrices, masks, and reference metrics.",
+  "files": {
+    "llm/falcon3-7b/matrices/H.npy": {
+      "bytes": 1254528,
+      "sha256": "401413c781fd5c5693caba19b51cace7083e61a71ce5cc180c2e48cb02d0834e"
+    },
+    "llm/falcon3-7b/r10/masks/prune_solution.json": {
+      "bytes": 5265,
+      "sha256": "ece7f09480caec69878be639d28666f9a843d0d055196490d01236a9c4f9ddf0"
+    },
+    "llm/falcon3-7b/r10/reference_metrics.json": {
+      "bytes": 2429,
+      "sha256": "9a6405000c0fe436cbc8bcea3398d3178e40f4aea3d03bdd47652f8030868364"
+    },
+    "llm/falcon3-7b/r20/masks/prune_solution.json": {
+      "bytes": 5267,
+      "sha256": "a35dacf4430b33072759c465fc1d59eaee6233ccb5d6daf676c150bc3d370d57"
+    },
+    "llm/falcon3-7b/r20/reference_metrics.json": {
+      "bytes": 3355,
+      "sha256": "82c606924e4c6f06681b790f2d025a20494bc8b7d407ee2e770dfb2337ba4673"
+    },
+    "llm/falcon3-7b/r30/masks/prune_solution.json": {
+      "bytes": 5266,
+      "sha256": "dedd9a8c1bfd658219eb13b5065113b8baf2b83da3da8a70fc5d925eae5745f7"
+    },
+    "llm/falcon3-7b/r30/reference_metrics.json": {
+      "bytes": 3360,
+      "sha256": "fde761d50070157d5553819347ef6a878011138bd562047119c5dab7c7bfb246"
+    },
+    "llm/falcon3-7b/r40/masks/prune_solution.json": {
+      "bytes": 5266,
+      "sha256": "8b355f735c9d136713e7fdd6d0d887fd748848658260cfbd36d5b4b13e9ed95b"
+    },
+    "llm/falcon3-7b/r40/reference_metrics.json": {
+      "bytes": 3368,
+      "sha256": "dc94437782b062c1608f619aed93ed7c9e5e30481801ff2bb4bbc093f2c6a690"
+    },
+    "llm/falcon3-7b/r50/masks/prune_solution.json": {
+      "bytes": 5266,
+      "sha256": "57204a6319f69e23c8cb9a32ec206b2e3059e337b20ad7f29bc110286350a94e"
+    },
+    "llm/falcon3-7b/r50/reference_metrics.json": {
+      "bytes": 3369,
+      "sha256": "877e811ad98ecfe5e984ef879c9d6312c063c0233319d6d39aa12a3331cf7179"
+    },
+    "llm/falcon3-7b/registry.json": {
+      "bytes": 145141,
+      "sha256": "bf6bbc2635bc39b085eaeb16b2dd1d71cb3ed5e41586750aca2d4a3b4e928aad"
+    },
+    "llm/llama-3.1-70b-instruct/matrices/H.npy": {
+      "bytes": 14745728,
+      "sha256": "6fa167c0acaa70ba6b9d85607d65779a26616994691181bf3241b346fa0cb14f"
+    },
+    "llm/llama-3.1-70b-instruct/r10/masks/prune_solution.json": {
+      "bytes": 18448,
+      "sha256": "9b7d2792f6fba605108a0bbee1020f294c3f5b9441d4fa8dc55859b17a986e2c"
+    },
+    "llm/llama-3.1-70b-instruct/r10/reference_metrics.json": {
+      "bytes": 643,
+      "sha256": "30444ddd25bb25c9322444f755fe9bd4db3e1ddf55af7ed0d2bc6a4ecedff673"
+    },
+    "llm/llama-3.1-70b-instruct/r20/masks/prune_solution.json": {
+      "bytes": 18467,
+      "sha256": "74c1db1e6513811a359d974d0ad7921fa97b86cb79ebe997bc51fe39474fcd40"
+    },
+    "llm/llama-3.1-70b-instruct/r20/reference_metrics.json": {
+      "bytes": 645,
+      "sha256": "8d09926d4e90bf77c6a63c5112285fd98af3954052477642d33de1fefd91079d"
+    },
+    "llm/llama-3.1-70b-instruct/r30/masks/prune_solution.json": {
+      "bytes": 18466,
+      "sha256": "f05e0b0bcc82508c65fd15081d0c41bca28f209083598f533a0f5aa70228aebd"
+    },
+    "llm/llama-3.1-70b-instruct/r30/reference_metrics.json": {
+      "bytes": 645,
+      "sha256": "25465b791f64beedd95f147b327bf74d1b5b7f890ca49453f1a9f9b3038bc682"
+    },
+    "llm/llama-3.1-70b-instruct/r40/masks/prune_solution.json": {
+      "bytes": 18463,
+      "sha256": "e5838b121a84cb8706d95ee4ec4435befd0e704609dfb24df45af8b5b0806fa5"
+    },
+    "llm/llama-3.1-70b-instruct/r40/reference_metrics.json": {
+      "bytes": 643,
+      "sha256": "666e0edde1c4db283e5f3fff9d932da933fb58fad7559db82704855e1a8c29b0"
+    },
+    "llm/llama-3.1-70b-instruct/r50/masks/prune_solution.json": {
+      "bytes": 18464,
+      "sha256": "49e056f84d6b4f04df59471800ff1193b65b841041a026a91b67d1deae42dc32"
+    },
+    "llm/llama-3.1-70b-instruct/r50/reference_metrics.json": {
+      "bytes": 644,
+      "sha256": "cba0771f158cce510f4db1e93d5a5e87c1dc8023ef03160e00fa93bbc40e5b06"
+    },
+    "llm/llama-3.1-70b-instruct/registry.json": {
+      "bytes": 578233,
+      "sha256": "a37da59491a248b0fbf3717b317391400c0fc7fde5f81583341369431557ad58"
+    },
+    "llm/llama-3.1-8b-instruct/matrices/H.npy": {
+      "bytes": 2359424,
+      "sha256": "149d4528e4ec37adb49099936f34a68e81c4e682837f96e22d45c0ba6c11c419"
+    },
+    "llm/llama-3.1-8b-instruct/r10/masks/prune_solution.json": {
+      "bytes": 7159,
+      "sha256": "b69d96fa3792d0ddd3f1115014e0d97541b567fffe6d6b824c398e0828e475bf"
+    },
+    "llm/llama-3.1-8b-instruct/r10/reference_metrics.json": {
+      "bytes": 2449,
+      "sha256": "158be63cb5a6626e81f1f08279a0584d11cf5f1214dd4e8b02f0efc4e5ce9022"
+    },
+    "llm/llama-3.1-8b-instruct/r20/masks/prune_solution.json": {
+      "bytes": 7153,
+      "sha256": "66524e444804318193a7e3b51130632da0081e48498f5718426f54f5f7f19c63"
+    },
+    "llm/llama-3.1-8b-instruct/r20/reference_metrics.json": {
+      "bytes": 3583,
+      "sha256": "0947830df629288e08fb4d600dd83d57229fbd96f02bf75389c9687b113fbffe"
+    },
+    "llm/llama-3.1-8b-instruct/r30/masks/prune_solution.json": {
+      "bytes": 7159,
+      "sha256": "78b88b1f87fa8af5d05daf3bcdc7210786570a5666943f4a183436d58e95f348"
+    },
+    "llm/llama-3.1-8b-instruct/r30/reference_metrics.json": {
+      "bytes": 3595,
+      "sha256": "65b0482618976c3499ff4d7e670cdb9587ff7b96a60e68c199b77cef5bf3b1b5"
+    },
+    "llm/llama-3.1-8b-instruct/r40/masks/prune_solution.json": {
+      "bytes": 7159,
+      "sha256": "b0ab270cb2693d9a98535b798ad1bd4d81e4f0270ef926a8e4b9057fc2ed23df"
+    },
+    "llm/llama-3.1-8b-instruct/r40/reference_metrics.json": {
+      "bytes": 3606,
+      "sha256": "7fbf7002d096b6843fbd2de19d18d756546b6cfd8b4a8b09fd5a1d0be049b23b"
+    },
+    "llm/llama-3.1-8b-instruct/r50/masks/prune_solution.json": {
+      "bytes": 7159,
+      "sha256": "7b0e8a99295083f6bd4805eecc13c055deafbef65d067fb6b675bce82cb06a38"
+    },
+    "llm/llama-3.1-8b-instruct/r50/reference_metrics.json": {
+      "bytes": 3370,
+      "sha256": "28cd87c4233d7b97fb654bbf2a349bb33440ecebf588dccd3343954fe3477596"
+    },
+    "llm/llama-3.1-8b-instruct/registry.json": {
+      "bytes": 215472,
+      "sha256": "0cb526eb1ec8aff36da28b53d0718debdfca82a22b01bf8bde99bd7727c21db1"
+    },
+    "llm/llama-3.2-3b/matrices/H.npy": {
+      "bytes": 1806464,
+      "sha256": "23bc747878bf1af6c3b23c6ca2dcc4be35dc74b08055b0afbd2df6a3f5531a6e"
+    },
+    "llm/llama-3.2-3b/r10/masks/prune_solution.json": {
+      "bytes": 6276,
+      "sha256": "939a2fc40632f344f4156b1591b272db382da04f351d315d0387d601af81abf3"
+    },
+    "llm/llama-3.2-3b/r10/reference_metrics.json": {
+      "bytes": 2441,
+      "sha256": "e07c35f53f43bca56bd37b4a0cbb9e6f0254e5fb652f8400469eb9e27bebd0e9"
+    },
+    "llm/llama-3.2-3b/r20/masks/prune_solution.json": {
+      "bytes": 6277,
+      "sha256": "d0eb76af53cf22a519734896dcaa2cde3de1923396231d89590c6fbd233f551d"
+    },
+    "llm/llama-3.2-3b/r20/reference_metrics.json": {
+      "bytes": 3590,
+      "sha256": "f681f6d16d0ab037e16c28402bbed8f3823f4f11d8f6db4ebb3ea77b010b3950"
+    },
+    "llm/llama-3.2-3b/r30/masks/prune_solution.json": {
+      "bytes": 6276,
+      "sha256": "717f8e60bbe43be0b20d7249ff4a9193909c32a989cc68a6916c450a0f0a3713"
+    },
+    "llm/llama-3.2-3b/r30/reference_metrics.json": {
+      "bytes": 3593,
+      "sha256": "bfcdae19791ee3c9e198c7803047fff07410dbb6e1ad5f2a4288ea23fdd1e273"
+    },
+    "llm/llama-3.2-3b/r40/masks/prune_solution.json": {
+      "bytes": 6278,
+      "sha256": "effd41fabf2d84cda7ce1558f9a0bc12a462266ee3c1c3c322edf98f6e0230c2"
+    },
+    "llm/llama-3.2-3b/r40/reference_metrics.json": {
+      "bytes": 3375,
+      "sha256": "1c1ae3c5b3fe8cb6a1bc12a2ad07e42f03cdedece3265f1a34a0e45d04cc84c2"
+    },
+    "llm/llama-3.2-3b/r50/masks/prune_solution.json": {
+      "bytes": 6277,
+      "sha256": "d092d86a2f2a30a28c0520012a895b79901adc9f96e723b0be90de9310755fd9"
+    },
+    "llm/llama-3.2-3b/r50/reference_metrics.json": {
+      "bytes": 2448,
+      "sha256": "bd95197e98edd49cfa5e36b646bc515fa4c4b0d51501c8423b6fbd77ae6041a2"
+    },
+    "llm/llama-3.2-3b/registry.json": {
+      "bytes": 184807,
+      "sha256": "b2c9c849da5b223a6f8bf67b9d167a5988a6e53214da0c0a72f2d1eed6283441"
+    },
+    "llm/mistral-nemo-12b/matrices/H.npy": {
+      "bytes": 3686528,
+      "sha256": "d85e2ef5c03b754a6e882eefcd5b036961e97290f243b2a3f9c92e8fe9fda7b2"
+    },
+    "llm/mistral-nemo-12b/r10/masks/prune_solution.json": {
+      "bytes": 8883,
+      "sha256": "c3fa48b6777ba648d24f486df415587a0d2783191122a8f6ce7fdf9fdd076eb3"
+    },
+    "llm/mistral-nemo-12b/r10/reference_metrics.json": {
+      "bytes": 2444,
+      "sha256": "564ed067d20f7cf1e1daf704d7a0c603ed341cd170134b8692c065bdac1df1d2"
+    },
+    "llm/mistral-nemo-12b/r20/masks/prune_solution.json": {
+      "bytes": 8889,
+      "sha256": "c9764e88a1873e70b9a1bd5440f01691dd22aea185f25c93c3462a7ce1113eab"
+    },
+    "llm/mistral-nemo-12b/r20/reference_metrics.json": {
+      "bytes": 3362,
+      "sha256": "7c1553da66e90c8d5df7986b0ab82d9e1a6f3756d007c2f4383601f982b72cc7"
+    },
+    "llm/mistral-nemo-12b/r30/masks/prune_solution.json": {
+      "bytes": 8887,
+      "sha256": "d8879fbdbcf8632c7b153c4b0f4356e694fb1132be4bb9a408b145820e2b6121"
+    },
+    "llm/mistral-nemo-12b/r30/reference_metrics.json": {
+      "bytes": 3360,
+      "sha256": "ea0b106611c69cfb2c3c90ed5d2490f1635bbb07c00aa46c8df2738d2cad4af4"
+    },
+    "llm/mistral-nemo-12b/r40/masks/prune_solution.json": {
+      "bytes": 8888,
+      "sha256": "a065bc75fa794abd1d22ea658d11cd644318a9ff8b1aec90132b6d23d62c61eb"
+    },
+    "llm/mistral-nemo-12b/r40/reference_metrics.json": {
+      "bytes": 3363,
+      "sha256": "ab271a1a3af2c3f4f0246efd77447cb7c90dd16889792b25631942887eccb8cb"
+    },
+    "llm/mistral-nemo-12b/r50/masks/prune_solution.json": {
+      "bytes": 8883,
+      "sha256": "5dbda89a4b2b92851e4f1c75e75cfc556c7d52e6dde9682c7e8045a79b2b9680"
+    },
+    "llm/mistral-nemo-12b/r50/reference_metrics.json": {
+      "bytes": 3362,
+      "sha256": "20e86f807af52de212f920095495c0991e67a23da437f349c226f2a0ca90078d"
+    },
+    "llm/mistral-nemo-12b/registry.json": {
+      "bytes": 269387,
+      "sha256": "e51e513e6b2c94cbe61c2b5b5c052244aab81daac06d3619b1adf5203a11faa5"
+    },
+    "llm/mistral-small-24b/matrices/H.npy": {
+      "bytes": 3686528,
+      "sha256": "7754d55fec3b1ba11a4802275208f4b36de6704bf50f2925e74b6b96704ae090"
+    },
+    "llm/mistral-small-24b/r10/masks/prune_solution.json": {
+      "bytes": 8890,
+      "sha256": "c3fcc42e91484401c5551edccb00b6738c069a636994c9d1a50ecf43441b5db7"
+    },
+    "llm/mistral-small-24b/r10/reference_metrics.json": {
+      "bytes": 514,
+      "sha256": "2f114b3a52ad8f2f2e6abd1e15ac5eda25d296ae379e20ba291e9e5acee35b8c"
+    },
+    "llm/mistral-small-24b/r20/masks/prune_solution.json": {
+      "bytes": 8889,
+      "sha256": "606c5facc186d456b885e8a8ef04bfe453feced81f10d0fa402e2550daa630e1"
+    },
+    "llm/mistral-small-24b/r20/reference_metrics.json": {
+      "bytes": 516,
+      "sha256": "8d8fbec6c74f76b361d13656df793dce68d60bbc991e05d7c88ef01dec10e2b1"
+    },
+    "llm/mistral-small-24b/r30/masks/prune_solution.json": {
+      "bytes": 8874,
+      "sha256": "fd7c4b5cc54ed40bc806f49f0c2066c28b6c66b8ae18ced5024648c2fc0040e8"
+    },
+    "llm/mistral-small-24b/r30/reference_metrics.json": {
+      "bytes": 518,
+      "sha256": "0d8618717af29254901f9fafa7edfcafff5792495f83c6ebc0e72b31cfd09ac8"
+    },
+    "llm/mistral-small-24b/r40/masks/prune_solution.json": {
+      "bytes": 8950,
+      "sha256": "10256fc6754df26694fc6b0ce8f63efa093e0460c477315b7de4e2a1035976bd"
+    },
+    "llm/mistral-small-24b/r40/reference_metrics.json": {
+      "bytes": 522,
+      "sha256": "885d15d789b8dcbd04380748ce403ed8bed042cc3bae2773900ef5220a2559a6"
+    },
+    "llm/mistral-small-24b/r50/masks/prune_solution.json": {
+      "bytes": 8937,
+      "sha256": "067dc4a62c926988b217647c341500a8684dd7cc0824bc7944790ca3c65a24a5"
+    },
+    "llm/mistral-small-24b/r50/reference_metrics.json": {
+      "bytes": 352,
+      "sha256": "ca06cfa25251910d725d0dee7dc44b565ceb689d669203015873dd49bfd54bf6"
+    },
+    "llm/mistral-small-24b/registry.json": {
+      "bytes": 270348,
+      "sha256": "822746d2f44173515750eea9c3a9ae0e2573a2cf988910e4104d0b3f5aeb1e91"
+    },
+    "vlm/internvl3-8b/matrices/H.npy": {
+      "bytes": 7054464,
+      "sha256": "28b1576b8afb85ec7b9f0dfea34fc8e4aa7e03ee814dc430a11ad837308817b0"
+    },
+    "vlm/internvl3-8b/r20/masks/prune_solution.json": {
+      "bytes": 12525,
+      "sha256": "961fdc73606ab598c7ffd2fe05b957f79847d45124d7a7a45eb7e61270b14912"
+    },
+    "vlm/internvl3-8b/r20/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "7c80288104f9332e7b1132a3b0b07896bb790333343e6a7411a4d18407ffb0cc"
+    },
+    "vlm/internvl3-8b/r30/masks/prune_solution.json": {
+      "bytes": 12523,
+      "sha256": "60f4cfb658d9ade8c2fc6cc4038f979396a657e1857f26d2c7275298bd99f661"
+    },
+    "vlm/internvl3-8b/r30/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "cce3d7e32dced5821ad1b20927ff0186a824ac7e4d1694e1bcf4127b2ce0d7b2"
+    },
+    "vlm/internvl3-8b/r40/masks/prune_solution.json": {
+      "bytes": 12525,
+      "sha256": "4eecdb2b46148b61060eeb2dc3c074cbe900b272e907268498e72cae09f90d03"
+    },
+    "vlm/internvl3-8b/r40/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "15a16dcf2ad4656a3c08ffeb32e942850efeb75f0f8d4834bc583dccb32d31ba"
+    },
+    "vlm/internvl3-8b/r50/masks/prune_solution.json": {
+      "bytes": 12524,
+      "sha256": "989a92726279cf62f9a80dc795a8426dd62cd870f44062dd2ceb1eef055b3f27"
+    },
+    "vlm/internvl3-8b/r50/reference_metrics.json": {
+      "bytes": 279,
+      "sha256": "d57972805c8588837bf927fc77eb08c50927b52a83088a2843c27b85b64c6a48"
+    },
+    "vlm/internvl3-8b/registry.json": {
+      "bytes": 357591,
+      "sha256": "4bdd3eb29d57b3687f4e6510ea5755c8bfc1d69f40d8ff72b597d87b8fc8d55c"
+    },
+    "vlm/qwen2.5-vl-7b/matrices/H.npy": {
+      "bytes": 10036352,
+      "sha256": "cdd586ddf13050cd4705e68afa39cf833f3eb9783e80695ef4c47bca720804de"
+    },
+    "vlm/qwen2.5-vl-7b/r20/masks/prune_solution.json": {
+      "bytes": 15087,
+      "sha256": "8b2edf8eda930be3b0ba22056cffeda0d28dd9f0ad2d3d019a73d3560ce1a6ce"
+    },
+    "vlm/qwen2.5-vl-7b/r20/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "f88a8969cc3112f82f2b89c1a7d638084cff6dc467b4a94a3324b5d4321f8264"
+    },
+    "vlm/qwen2.5-vl-7b/r30/masks/prune_solution.json": {
+      "bytes": 15087,
+      "sha256": "167eec3e488de98a6e032c93624c15ac07fd75d786f99b6e7fd993250bf69ce1"
+    },
+    "vlm/qwen2.5-vl-7b/r30/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "6036da5eaf734be1f924e157080bf328a450d72e2de32515d227d1e5e223540c"
+    },
+    "vlm/qwen2.5-vl-7b/r40/masks/prune_solution.json": {
+      "bytes": 15087,
+      "sha256": "56c3b69371dd8457268ef82174dea1f94033f8c6ed81d70e6b53879b0bbb8429"
+    },
+    "vlm/qwen2.5-vl-7b/r40/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "8ea3db85fa9339ce21f01f01db6913cda5917532abf8ecf52e0e03f631407421"
+    },
+    "vlm/qwen2.5-vl-7b/r50/masks/prune_solution.json": {
+      "bytes": 15087,
+      "sha256": "9c0c4d1da3ce396ba42e0b7e0dfa55512a8e7c3450be691e9f9397601ca54398"
+    },
+    "vlm/qwen2.5-vl-7b/r50/reference_metrics.json": {
+      "bytes": 279,
+      "sha256": "2fe8504a006dcc6c2c26aecd92c22a728bca325324e358f42d692662e1462414"
+    },
+    "vlm/qwen2.5-vl-7b/registry.json": {
+      "bytes": 425624,
+      "sha256": "00c2cc67dca21c941d81746e49fd824a755dda21cecea0b8238b657fcda22a6d"
+    },
+    "vlm/qwen3-vl-8b/matrices/H.npy": {
+      "bytes": 11944064,
+      "sha256": "47806d4ec73e5657cc9d4a8cdbe9527a235f0281e479e4197a8c5bcb524be151"
+    },
+    "vlm/qwen3-vl-8b/r20/masks/prune_solution.json": {
+      "bytes": 16524,
+      "sha256": "fec443773181ad4521dde343370ea6cc83c219dedf6c0fa743f1a45fb67214ff"
+    },
+    "vlm/qwen3-vl-8b/r20/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "4ed3921af1129405bb8586ee0bb408e9728d1fff71919be093f2d021baf58c7f"
+    },
+    "vlm/qwen3-vl-8b/r30/masks/prune_solution.json": {
+      "bytes": 16523,
+      "sha256": "a4aeecd310dd7ea2dd7d6a68d5e9c2c30e252d95d258b7204b2b65258d76077a"
+    },
+    "vlm/qwen3-vl-8b/r30/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "f2cd56f0af13d98e6d41b8e29c96b6d5c5825699381c2fadef25a5158089ad38"
+    },
+    "vlm/qwen3-vl-8b/r40/masks/prune_solution.json": {
+      "bytes": 16526,
+      "sha256": "236aafaaf1994f41a62612b5cae947352980ed59d20332bc05c20746bd5431e6"
+    },
+    "vlm/qwen3-vl-8b/r40/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "e7761dd8455f3668c74bdb15bd0094ecec411b016924e1f70bccbc5b929f77ba"
+    },
+    "vlm/qwen3-vl-8b/r50/masks/prune_solution.json": {
+      "bytes": 16523,
+      "sha256": "8886d40d959eee90ca2916f001a544a6b4ff8f6bd8bad89882183cddb2669dfb"
+    },
+    "vlm/qwen3-vl-8b/r50/reference_metrics.json": {
+      "bytes": 278,
+      "sha256": "32cc159488329497cc6df32c0e79c4cdcf32d0e398f9a570d00fb235ca00c634"
+    },
+    "vlm/qwen3-vl-8b/registry.json": {
+      "bytes": 466138,
+      "sha256": "89bf408b7c18bce9c724a7ff71dd0bfd50730a60e26416f5f866efee44584a07"
+    }
+  },
+  "models": {
+    "falcon3-7b": {
+      "h": "llm/falcon3-7b/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "tiiuae/Falcon3-7B-Base",
+      "precision": "bf16",
+      "ratios": {
+        "10": {
+          "mask": "llm/falcon3-7b/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/falcon3-7b/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/falcon3-7b/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/falcon3-7b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/falcon3-7b/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/falcon3-7b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/falcon3-7b/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/falcon3-7b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/falcon3-7b/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/falcon3-7b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/falcon3-7b/registry.json"
+    },
+    "internvl3-8b": {
+      "h": "vlm/internvl3-8b/matrices/H.npy",
+      "kind": "vlm",
+      "model_id": "OpenGVLab/InternVL3-8B-hf",
+      "ratios": {
+        "20": {
+          "mask": "vlm/internvl3-8b/r20/masks/prune_solution.json",
+          "reference_metrics": "vlm/internvl3-8b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "vlm/internvl3-8b/r30/masks/prune_solution.json",
+          "reference_metrics": "vlm/internvl3-8b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "vlm/internvl3-8b/r40/masks/prune_solution.json",
+          "reference_metrics": "vlm/internvl3-8b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "vlm/internvl3-8b/r50/masks/prune_solution.json",
+          "reference_metrics": "vlm/internvl3-8b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "vlm/internvl3-8b/registry.json"
+    },
+    "llama-3.1-70b-instruct": {
+      "h": "llm/llama-3.1-70b-instruct/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "meta-llama/Llama-3.1-70B-Instruct",
+      "precision": "nf4",
+      "ratios": {
+        "10": {
+          "mask": "llm/llama-3.1-70b-instruct/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-70b-instruct/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/llama-3.1-70b-instruct/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-70b-instruct/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/llama-3.1-70b-instruct/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-70b-instruct/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/llama-3.1-70b-instruct/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-70b-instruct/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/llama-3.1-70b-instruct/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-70b-instruct/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/llama-3.1-70b-instruct/registry.json"
+    },
+    "llama-3.1-8b-instruct": {
+      "h": "llm/llama-3.1-8b-instruct/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "meta-llama/Llama-3.1-8B-Instruct",
+      "precision": "bf16",
+      "ratios": {
+        "10": {
+          "mask": "llm/llama-3.1-8b-instruct/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-8b-instruct/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/llama-3.1-8b-instruct/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-8b-instruct/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/llama-3.1-8b-instruct/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-8b-instruct/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/llama-3.1-8b-instruct/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-8b-instruct/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/llama-3.1-8b-instruct/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.1-8b-instruct/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/llama-3.1-8b-instruct/registry.json"
+    },
+    "llama-3.2-3b": {
+      "h": "llm/llama-3.2-3b/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": "bf16",
+      "ratios": {
+        "10": {
+          "mask": "llm/llama-3.2-3b/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.2-3b/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/llama-3.2-3b/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.2-3b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/llama-3.2-3b/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.2-3b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/llama-3.2-3b/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.2-3b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/llama-3.2-3b/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/llama-3.2-3b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/llama-3.2-3b/registry.json"
+    },
+    "mistral-nemo-12b": {
+      "h": "llm/mistral-nemo-12b/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "mistralai/Mistral-Nemo-Base-2407",
+      "precision": "bf16",
+      "ratios": {
+        "10": {
+          "mask": "llm/mistral-nemo-12b/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-nemo-12b/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/mistral-nemo-12b/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-nemo-12b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/mistral-nemo-12b/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-nemo-12b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/mistral-nemo-12b/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-nemo-12b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/mistral-nemo-12b/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-nemo-12b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/mistral-nemo-12b/registry.json"
+    },
+    "mistral-small-24b": {
+      "h": "llm/mistral-small-24b/matrices/H.npy",
+      "kind": "llm",
+      "model_id": "mistralai/Mistral-Small-24B-Base-2501",
+      "precision": "bf16",
+      "ratios": {
+        "10": {
+          "mask": "llm/mistral-small-24b/r10/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-small-24b/r10/reference_metrics.json"
+        },
+        "20": {
+          "mask": "llm/mistral-small-24b/r20/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-small-24b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "llm/mistral-small-24b/r30/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-small-24b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "llm/mistral-small-24b/r40/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-small-24b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "llm/mistral-small-24b/r50/masks/prune_solution.json",
+          "reference_metrics": "llm/mistral-small-24b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "llm/mistral-small-24b/registry.json"
+    },
+    "qwen2.5-vl-7b": {
+      "h": "vlm/qwen2.5-vl-7b/matrices/H.npy",
+      "kind": "vlm",
+      "model_id": "Qwen/Qwen2.5-VL-7B-Instruct",
+      "ratios": {
+        "20": {
+          "mask": "vlm/qwen2.5-vl-7b/r20/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen2.5-vl-7b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "vlm/qwen2.5-vl-7b/r30/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen2.5-vl-7b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "vlm/qwen2.5-vl-7b/r40/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen2.5-vl-7b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "vlm/qwen2.5-vl-7b/r50/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen2.5-vl-7b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "vlm/qwen2.5-vl-7b/registry.json"
+    },
+    "qwen3-vl-8b": {
+      "h": "vlm/qwen3-vl-8b/matrices/H.npy",
+      "kind": "vlm",
+      "model_id": "Qwen/Qwen3-VL-8B-Instruct",
+      "ratios": {
+        "20": {
+          "mask": "vlm/qwen3-vl-8b/r20/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen3-vl-8b/r20/reference_metrics.json"
+        },
+        "30": {
+          "mask": "vlm/qwen3-vl-8b/r30/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen3-vl-8b/r30/reference_metrics.json"
+        },
+        "40": {
+          "mask": "vlm/qwen3-vl-8b/r40/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen3-vl-8b/r40/reference_metrics.json"
+        },
+        "50": {
+          "mask": "vlm/qwen3-vl-8b/r50/masks/prune_solution.json",
+          "reference_metrics": "vlm/qwen3-vl-8b/r50/reference_metrics.json"
+        }
+      },
+      "registry": "vlm/qwen3-vl-8b/registry.json"
+    }
+  },
+  "release": "paper-v1",
+  "schema_version": 1
+}

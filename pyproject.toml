@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cocurve"
+version = "1.0.0"
+description = "Interaction-aware structured pruning for language and vision-language models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Zhiren Gong"},
+  {name = "Zihao Zeng"},
+  {name = "Tiantong Wang"},
+  {name = "Honoka Anada"},
+  {name = "Yixin Wang"},
+  {name = "Zijie Wang"},
+  {name = "Ming Xiao"},
+  {name = "Chau Yuen"},
+  {name = "Wei Yang Bryan Lim"},
+]
+dependencies = [
+  "torch>=2.2",
+  "transformers>=4.57,<5",
+  "datasets>=2.20",
+  "accelerate>=0.33",
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "PyYAML>=6.0.1",
+  "tqdm>=4.66",
+  "huggingface-hub>=0.34,<1.0",
+]
+
+[project.optional-dependencies]
+recovery = ["peft>=0.13", "safetensors>=0.4"]
+quantization = ["bitsandbytes>=0.43"]
+vlm = ["pillow>=10.0", "qwen-vl-utils>=0.0.14"]
+dev = ["pytest>=8", "ruff>=0.7"]
+all = [
+  "peft>=0.13",
+  "safetensors>=0.4",
+  "bitsandbytes>=0.43",
+  "pillow>=10.0",
+  "qwen-vl-utils>=0.0.14",
+]
+
+[project.scripts]
+cocurve-artifacts = "cocurve.artifacts:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

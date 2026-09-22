@@ -5,7 +5,7 @@ The standard-eval generation stage only saves completions
 into executable programs, runs their unit tests in an isolated subprocess with
 wall-clock and memory limits, and reports pass@1. It is intentionally
 self-contained so the same scorer applies identically to the full model, our
-pruned model, and every baseline — keeping the comparison fair.
+pruned model and every evaluated checkpoint — keeping the comparison fair.
 """
 
 from __future__ import annotations

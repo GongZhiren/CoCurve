@@ -21,7 +21,9 @@ from cocurve.prune import clear_runtime_masks, register_runtime_masks
 from cocurve.units import build_unit_registry
 
 
-MC_TASKS = {"arc_challenge", "arc_easy", "hellaswag", "winogrande", "mmlu", "piqa", "openbookqa", "boolq"}
+MC_TASKS = {"arc_challenge", "arc_easy", "hellaswag", "winogrande", "mmlu",
+            "piqa", "openbookqa", "boolq", "commonsense_qa", "race",
+            "race_high", "quail", "mmlu_5shot"}
 GEN_TASKS = {"gsm8k", "humaneval", "mbpp"}
 LM_TASKS = {"wikitext", "ptb", "c4"}
 
@@ -46,18 +48,15 @@ def _load_local_jsonl(rel_path: str) -> List[Dict[str, Any]]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run full standard benchmark evaluation for baseline or masked models.")
+    parser = argparse.ArgumentParser(description="Evaluate dense or CoCurve-masked language models.")
     parser.add_argument("--config", default="configs/default.yaml")
     parser.add_argument("--model-key", default=None)
+    parser.add_argument("--load-in-4bit", action="store_true", help="Evaluate the fixed mask with NF4 weights.")
+    parser.add_argument("--load-in-8bit", action="store_true", help="Evaluate the fixed mask with LLM.int8 weights.")
+    parser.add_argument("--bf16", action="store_true", help="Force bf16 even if the model registry defaults to NF4.")
     parser.add_argument("--run-dir", required=True)
     parser.add_argument("--tasks", default="all", help="Comma-separated tasks or all.")
     parser.add_argument("--mask-run-dir", default=None, help="Optional pruning run dir containing masks/prune_solution.json.")
-    parser.add_argument("--compensate", action="store_true",
-                        help="Apply edge-derived coupling-aware compensation (rescale kept FFN units).")
-    parser.add_argument("--comp-h-run-dir", default=None,
-                        help="Run dir holding matrices/H.npy for compensation (defaults to mask-run-dir).")
-    parser.add_argument("--comp-gamma", type=float, default=1.0)
-    parser.add_argument("--comp-clip", type=float, default=0.35)
     parser.add_argument("--max-samples", type=int, default=-1, help="Limit per non-generation task; -1 evaluates all rows.")
     parser.add_argument("--max-generation-samples", type=int, default=-1, help="Limit per generation task; -1 evaluates all rows.")
     parser.add_argument("--max-seq-len", type=int, default=2048)
@@ -91,6 +90,17 @@ def dataset_for_task(task: str, cache_dir: str):
         return load_dataset("winogrande", "winogrande_xl", split="validation", cache_dir=cache_dir)
     if task == "mmlu":
         return load_dataset("cais/mmlu", "all", split="test", cache_dir=cache_dir)
+    if task == "mmlu_5shot":
+        return load_dataset("cais/mmlu", "all", split="test", cache_dir=cache_dir)
+    if task == "commonsense_qa":
+        return load_dataset("tau/commonsense_qa", split="validation", cache_dir=cache_dir)
+    if task == "race":
+        return load_dataset("ehovy/race", "middle", split="test", cache_dir=cache_dir)
+    if task == "race_high":
+        return load_dataset("ehovy/race", "high", split="test", cache_dir=cache_dir)
+    if task == "quail":
+        return load_dataset("textmachinelab/quail", split="validation",
+                            revision="refs/convert/parquet", cache_dir=cache_dir)
     if task == "gsm8k":
         return load_dataset("gsm8k", "main", split="test", cache_dir=cache_dir)
     if task == "humaneval":
@@ -121,6 +131,29 @@ def mmlu_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
     prompt = f"Subject: {row.get('subject', 'unknown')}\nQuestion: {row['question']}\nAnswer:"
     gold = labels[int(row["answer"])]
     return prompt, labels, [str(x) for x in row["choices"]], gold
+
+
+_MMLU_DEV_CACHE: Dict[str, str] = {}
+
+
+def mmlu_5shot_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
+    subject = str(row.get("subject", "unknown"))
+    if subject not in _MMLU_DEV_CACHE:
+        dev = load_dataset("cais/mmlu", "all", split="dev")
+        examples = []
+        for item in dev:
+            if item.get("subject") != subject:
+                continue
+            labels = [chr(ord("A") + i) for i in range(len(item["choices"]))]
+            options = "\n".join(f"{label}. {choice}" for label, choice in zip(labels, item["choices"]))
+            examples.append(f"Question: {item['question']}\n{options}\nAnswer: {labels[int(item['answer'])]}")
+            if len(examples) == 5:
+                break
+        _MMLU_DEV_CACHE[subject] = "\n\n".join(examples) + "\n\n"
+    labels = [chr(ord("A") + i) for i in range(len(row["choices"]))]
+    prompt = (f"The following are multiple choice questions about {subject.replace('_', ' ')}.\n\n"
+              f"{_MMLU_DEV_CACHE[subject]}Question: {row['question']}\nAnswer:")
+    return prompt, labels, [str(x) for x in row["choices"]], labels[int(row["answer"])]
 
 
 def hellaswag_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
@@ -161,9 +194,32 @@ def boolq_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
     return prompt, labels, continuations, gold
 
 
+def commonsenseqa_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
+    choices = row["choices"]
+    return (f"Question: {row['question']}\nAnswer:",
+            [str(x) for x in choices["label"]],
+            [str(x) for x in choices["text"]],
+            str(row["answerKey"]).strip().upper())
+
+
+def race_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
+    return (f"Article: {row['article']}\nQuestion: {row['question']}\nAnswer:",
+            ["A", "B", "C", "D"], [str(x) for x in row["options"]],
+            str(row["answer"]).strip().upper())
+
+
+def quail_choices(row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
+    answers = [str(x) for x in row["answers"]]
+    labels = ["A", "B", "C", "D"][:len(answers)]
+    return (f"{row['context']}\nQuestion: {row['question']}\nAnswer:", labels,
+            answers, labels[int(row["correct_answer_id"])])
+
+
 def row_to_mc(task: str, row: Dict[str, Any]) -> Tuple[str, List[str], List[str], str]:
     if task.startswith("arc_"):
         return arc_choices(row)
+    if task == "mmlu_5shot":
+        return mmlu_5shot_choices(row)
     if task == "mmlu":
         return mmlu_choices(row)
     if task == "hellaswag":
@@ -176,6 +232,12 @@ def row_to_mc(task: str, row: Dict[str, Any]) -> Tuple[str, List[str], List[str]
         return openbookqa_choices(row)
     if task == "boolq":
         return boolq_choices(row)
+    if task == "commonsense_qa":
+        return commonsenseqa_choices(row)
+    if task in {"race", "race_high"}:
+        return race_choices(row)
+    if task == "quail":
+        return quail_choices(row)
     raise ValueError(task)
 
 
@@ -349,9 +411,7 @@ def evaluate_code_generation(bundle: ModelBundle, task: str, ds: Sequence[Any], 
     }
 
 
-def maybe_register_mask(bundle: ModelBundle, cfg: Dict[str, Any], mask_run_dir: Optional[str],
-                        compensate: bool = False, comp_h_run_dir: Optional[str] = None,
-                        comp_gamma: float = 1.0, comp_clip: float = 0.35):
+def maybe_register_mask(bundle: ModelBundle, cfg: Dict[str, Any], mask_run_dir: Optional[str]):
     if not mask_run_dir:
         return None
     pruning_cfg = cfg["pruning"]
@@ -375,16 +435,7 @@ def maybe_register_mask(bundle: ModelBundle, cfg: Dict[str, Any], mask_run_dir: 
             attn_by_layer.setdefault(spec.layer_idx, []).append(spec)
         else:
             ffn_by_layer.setdefault(spec.layer_idx, []).append(spec)
-    ffn_gains = None
-    if compensate:
-        from cocurve.edge_compensation import compute_ffn_compensation_gains
-        h_dir = comp_h_run_dir or mask_run_dir
-        H = np.load(Path(h_dir) / "matrices/H.npy")
-        ffn_gains = compute_ffn_compensation_gains(H, registry.units, selected_units,
-                                                   gamma=comp_gamma, clip=comp_clip)
-        print(f"[compensate] applied edge-derived gains to {len(ffn_gains)} kept FFN units "
-              f"(gamma={comp_gamma} clip={comp_clip})")
-    return register_runtime_masks(bundle, attn_by_layer, ffn_by_layer, selected_units, ffn_gains=ffn_gains)
+    return register_runtime_masks(bundle, attn_by_layer, ffn_by_layer, selected_units)
 
 
 def main() -> None:
@@ -397,6 +448,17 @@ def main() -> None:
     save_json(out_dir / "eval_args.json", vars(args))
 
     mcfg = dict(model_config(cfg))
+    if sum((args.load_in_4bit, args.load_in_8bit, args.bf16)) > 1:
+        raise SystemExit("choose only one of --load-in-4bit, --load-in-8bit, and --bf16")
+    if args.bf16:
+        mcfg.pop("load_in_4bit", None)
+        mcfg.pop("load_in_8bit", None)
+    if args.load_in_4bit:
+        mcfg["load_in_4bit"] = True
+        mcfg.pop("load_in_8bit", None)
+    if args.load_in_8bit:
+        mcfg["load_in_8bit"] = True
+        mcfg.pop("load_in_4bit", None)
     bundle = load_model_bundle(mcfg, cfg["model"].get("tokenizer", {}))
     device = bundle_device(bundle)
     run_env = {
@@ -422,9 +484,7 @@ def main() -> None:
     tasks = list(cfg["eval"]["eval"]["standard_benchmarks"]["tasks"]) if args.tasks == "all" else [x.strip() for x in args.tasks.split(",") if x.strip()]
     cache_dir = cfg["eval"]["eval"]["standard_benchmarks"]["cache_dir"]
 
-    mask_state = maybe_register_mask(bundle, cfg, args.mask_run_dir,
-                                     compensate=args.compensate, comp_h_run_dir=args.comp_h_run_dir,
-                                     comp_gamma=args.comp_gamma, comp_clip=args.comp_clip)
+    mask_state = maybe_register_mask(bundle, cfg, args.mask_run_dir)
     # Merge into any existing report so a subset re-run (e.g. adding new datasets
     # or refreshing a fixed task) augments rather than clobbers prior results.
     report_path = out_dir / "standard_eval_report.json"

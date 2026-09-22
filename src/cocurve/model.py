@@ -36,14 +36,25 @@ def _layer_stack(model: AutoModelForCausalLM):
 
 
 def load_model_bundle(model_cfg: Dict[str, object], tokenizer_cfg: Dict[str, object]) -> ModelBundle:
-    path = str(model_cfg["path"])
+    path = str(model_cfg.get("path") or model_cfg["hf_id"])
+    local_only = bool(model_cfg.get("local_files_only", "path" in model_cfg))
     dtype = to_torch_dtype(str(model_cfg.get("torch_dtype", "bfloat16")))
     device_map = model_cfg.get("device_map", "auto")
+    quant_kwargs = {}
+    if bool(model_cfg.get("load_in_4bit", False)):
+        from transformers import BitsAndBytesConfig
+        quant_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=dtype,
+        )
     model_kwargs = {
+        **quant_kwargs,
         "torch_dtype": dtype,
         "trust_remote_code": True,
         "device_map": device_map,
-        "attn_implementation": "eager",
+        "attn_implementation": str(model_cfg.get("attn_implementation", "eager")),
     }
     if model_cfg.get("load_in_8bit", False):
         model_kwargs["load_in_8bit"] = True
@@ -52,12 +63,13 @@ def load_model_bundle(model_cfg: Dict[str, object], tokenizer_cfg: Dict[str, obj
         path,
         trust_remote_code=bool(tokenizer_cfg.get("trust_remote_code", True)),
         use_fast=bool(tokenizer_cfg.get("use_fast", True)),
-        local_files_only=True,
+        local_files_only=local_only,
+        **dict(model_cfg.get("tokenizer_kwargs", {}) or {}),
     )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(path, local_files_only=True, **model_kwargs)
+    model = AutoModelForCausalLM.from_pretrained(path, local_files_only=local_only, **model_kwargs)
     model.eval()
     layers = _layer_stack(model)
     config = model.config
