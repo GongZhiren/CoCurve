@@ -8,6 +8,10 @@
 how removals interact, then conditions every pruning step on what has already
 been removed.**
 
+<p align="center">
+  <a href="https://gongzhiren.github.io/personal-website/"><strong>Zhiren Gong</strong></a>, Zeng Zihao, Tiantong Wang, Yixin Wang, Honoka Anada, Zijie Wang, Ming Xiao, Chau Yuen, Wei Yang Bryan Lim
+</p>
+
 <table>
   <tr>
     <td align="center">
