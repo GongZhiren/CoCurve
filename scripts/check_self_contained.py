@@ -47,6 +47,9 @@ def main() -> None:
     private_patterns = {
         "private filesystem path": re.compile(r"/(?:scratch|home)/[A-Za-z0-9_.-]+/"),
         "Overleaf token": re.compile(r"\bolp_[A-Za-z0-9]+"),
+        "Hugging Face token": re.compile(r"\bhf_[A-Za-z0-9]{20,}\b"),
+        "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
+        "signed storage URL": re.compile(r"https?://[^\s\"']+[?&](?:sig|X-Amz-Signature|token)="),
         "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----"),
         "literal IPv4 address": re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"),
     }

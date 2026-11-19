@@ -139,8 +139,10 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/paper.yaml")
     ap.add_argument("--model-key", required=True)
-    ap.add_argument("--mask-run-dir", required=True,
+    ap.add_argument("--mask-run-dir", default=None,
                     help="run dir holding masks/prune_solution.json to realise before training")
+    ap.add_argument("--reconstructed-checkpoint", default=None,
+                    help="start from an OBS/FFN-refined checkpoint; do not prune it again")
     ap.add_argument("--out", required=True, help="destination for the adapter, metadata, and evaluation")
     ap.add_argument("--tokens", type=int, default=8_000_000,
                     help="target token count for --corpus c4 (ignored for the paper's full Alpaca pass)")
@@ -175,6 +177,12 @@ def main() -> None:
               "for the low-cost cross-model recovery sweep"),
     )
     args = ap.parse_args()
+    if not args.mask_run_dir and not args.reconstructed_checkpoint:
+        ap.error("provide --mask-run-dir or --reconstructed-checkpoint")
+    if args.reconstructed_checkpoint and (args.mask_run_dir or args.runtime_mask):
+        ap.error("a reconstructed checkpoint is already sliced; omit mask options")
+    if args.save_merged and args.runtime_mask:
+        ap.error("runtime masks are not serialized into merged weights; save the adapter and reuse its mask")
     if args.epochs < 1:
         raise SystemExit("ABORT: --epochs must be positive")
     eval_tasks = [task.strip() for task in args.eval_tasks.split(",") if task.strip()]
@@ -185,7 +193,24 @@ def main() -> None:
     torch.manual_seed(args.seed)
     cfg = load_config(args.config)
     cfg["run"] = dict(cfg["run"]); cfg["run"]["model_key"] = args.model_key
-    bundle = load_model_bundle(model_config(cfg), cfg["model"].get("tokenizer", {}))
+    if args.reconstructed_checkpoint:
+        from transformers import AutoTokenizer
+        from cocurve.checkpoints import load_checkpoint
+        from cocurve.model import ModelBundle
+        recovered = load_checkpoint(
+            args.reconstructed_checkpoint, device="cuda:0" if torch.cuda.is_available() else "cpu")
+        config = recovered.config
+        tokenizer = AutoTokenizer.from_pretrained(args.reconstructed_checkpoint, local_files_only=True)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        bundle = ModelBundle(
+            recovered, tokenizer, str(next(recovered.parameters()).device),
+            config.num_hidden_layers, config.num_attention_heads, config.hidden_size,
+            getattr(config, "head_dim", None) or config.hidden_size // config.num_attention_heads,
+            config.intermediate_size, config.num_key_value_heads, "gqa", config.model_type,
+            args.reconstructed_checkpoint)
+    else:
+        bundle = load_model_bundle(model_config(cfg), cfg["model"].get("tokenizer", {}))
     device = bundle_device(bundle)
     tok = bundle.tokenizer
 
@@ -198,11 +223,18 @@ def main() -> None:
     for s in registry.units:
         (attn_by_layer if s.unit_type == "attn_head" else ffn_by_layer) \
             .setdefault(s.layer_idx, []).append(s)
-    solution = json.loads((Path(args.mask_run_dir) / "masks/prune_solution.json").read_text())
-    pruned = set(solution["pruned_units"])
-    kept = set(range(len(registry.units))) - pruned
+    if args.mask_run_dir:
+        solution = json.loads((Path(args.mask_run_dir) / "masks/prune_solution.json").read_text())
+        pruned = set(solution["pruned_units"])
+        kept = set(range(len(registry.units))) - pruned
     n0 = sum(p.numel() for p in bundle.model.parameters())
-    if args.runtime_mask:
+    if args.reconstructed_checkpoint:
+        provenance = Path(args.reconstructed_checkpoint) / "reconstruction.json"
+        if provenance.is_file():
+            n0 = json.loads(provenance.read_text())["parameters_before"]
+        n1 = sum(p.numel() for p in bundle.model.parameters())
+        removed_fraction = 1 - n1 / n0
+    elif args.runtime_mask:
         # bitsandbytes stores NF4 matrices in a packed representation that must
         # not be sliced as if it were an ordinary dense tensor.  Runtime hooks
         # implement the identical fixed unit mask while preserving the packed
@@ -346,7 +378,8 @@ def main() -> None:
     print("merging adapters ...", flush=True)
     merged = model if is_kbit else model.merge_and_unload()
     if args.save_merged:
-        merged.save_pretrained(out); tok.save_pretrained(out)
+        from cocurve.checkpoints import save_checkpoint
+        save_checkpoint(merged, out, tokenizer=tok)
     meta_path = out / "recovery_meta.json"
     actual_training_tokens = int(data.numel()) * args.epochs
     meta = dict(

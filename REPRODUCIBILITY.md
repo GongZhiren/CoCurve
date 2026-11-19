@@ -80,6 +80,12 @@ Use `vlm_build_h.py` followed by `run_vlm.py` as shown in the README.
 
 ## Recovery
 
+For optional fixed-mask OBS, FFN refinement, directly reloadable sliced
+checkpoints, or LoRA on a reconstructed model, see
+[Reconstruction and checkpoints](docs/reconstruction.md). The two reconstruction
+routes retain the CoCurve attention groups and per-layer pruning counts;
+only FFN refinement changes FFN channel identities.
+
 The LLM recipe uses cleaned Alpaca, rank 16, alpha 32, dropout 0, 1024-token
 sequences, batch 2, accumulation 8, one epoch, and peak learning rate `1e-4`.
 All attention and FFN projections are targeted. The compact adapter is saved by

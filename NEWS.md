@@ -1,5 +1,15 @@
 # News
 
+## 2026-11-19 — reconstruction and checkpoint reuse
+
+- Added fixed-mask OBS and FFN refinement as optional CoCurve recovery paths.
+- Added LoRA recovery starting from an already reconstructed checkpoint.
+- Added safe loading of heterogeneous sliced checkpoints and streaming export
+  into checksummed 1.9 GB safetensors shards.
+- Fixed fully removed FFNs to eliminate their parameters and prevent recovery
+  from reviving deleted computation.
+- Added numerical, serialization, integrity, and small-model training checks.
+
 ## 2026-09-22 — paper reproduction release
 
 - Added publication-locked curvature matrices, unit registries, masks, and

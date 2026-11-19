@@ -51,6 +51,9 @@ been removed.**
 
 ## News
 
+- **November 2026 — reconstruction and checkpoint reuse.** Added fixed-mask OBS,
+  FFN refinement, continued LoRA recovery, and a loader for physically sliced
+  checkpoints. See [Reconstruction and checkpoints](docs/reconstruction.md).
 - **September 2026 — complete paper reproduction release.** Added the final
   LLM/VLM implementation, all 42 publication masks and curvature matrices,
   direct evaluation, exact mask reconstruction, recovery and quantization
@@ -341,6 +344,30 @@ projector.
 
 ## Quantization and recovery
 
+### Reconstruction before optional LoRA
+
+Two optional reconstruction paths are available without importing baseline
+repositories: **OBS** keeps every selected unit fixed; **FFN refinement** keeps
+the selected attention groups and each layer's pruning budget, then refines FFN
+channel identities. Both save a physically sliced, reloadable checkpoint:
+
+```bash
+python scripts/run_reconstruction.py \
+  --model-key llama-3.1-8b-instruct \
+  --mask artifacts/paper-v1/llm/llama-3.1-8b-instruct/r30/masks/prune_solution.json \
+  --calibration data/calibration/reconstruction.jsonl \
+  --method obs --output outputs/llama8b-obs-r30
+```
+
+Use `--method ffn_refinement` for the second path. Calibration must be independent
+of evaluation data and contain enough text for 256 windows of 2,048 tokens.
+The output can be loaded directly with `cocurve.checkpoints.load_checkpoint`
+or passed to `run_lora_recovery.py --reconstructed-checkpoint`.
+See [the recovery guide](docs/reconstruction.md) for the full workflow,
+checkpoint validation, and release status.
+
+### Quantized evaluation and common recovery
+
 - `--precision nf4` evaluates a released mask with NF4, double quantization,
   and bf16 compute.
 - `--precision int8` evaluates the same structural mask with LLM.int8.
@@ -360,10 +387,12 @@ artifacts/paper-v1/ publication-locked H, registries, masks, and metrics
 tests/              artifact integrity and exact mask reconstruction checks
 ```
 
-This release focuses on CoCurve and the paper's principal evaluation,
-recovery, quantization, and deployment paths. It intentionally excludes model
-weights, datasets, caches, generated logs, baseline source trees, plotting
-scripts, internal diagnostics, and submission materials.
+This Git repository focuses on CoCurve and the paper's principal evaluation,
+reconstruction, recovery, quantization, and deployment paths. Large model weights
+are distributed separately from the source tree. The current verified download
+status is documented in [the checkpoint guide](docs/reconstruction.md).
+Datasets, caches, generated logs, baseline source trees, plotting scripts,
+internal diagnostics, and submission materials are excluded.
 
 See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for the complete protocol,
 artifact contract, expected variation, and troubleshooting.

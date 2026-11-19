@@ -22,6 +22,20 @@ class PhysicalBackupEntry:
     original: torch.Tensor
 
 
+class ResidualConstantFFN(nn.Module):
+    """Realize a fully removed FFN, retaining only its output bias if present."""
+
+    def __init__(self, bias: torch.Tensor | None = None):
+        super().__init__()
+        self.register_parameter(
+            "bias", None if bias is None else nn.Parameter(bias.detach().clone(), requires_grad=False)
+        )
+
+    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
+        output = torch.zeros_like(hidden_states)
+        return output if self.bias is None else output + self.bias
+
+
 def _attn_head_keep_mask(specs: List[UnitSpec], selected_unit_ids: Set[int], num_heads: int) -> torch.Tensor:
     mask = torch.ones(num_heads, dtype=torch.float32)
     if not specs:
@@ -241,11 +255,16 @@ def apply_structural_prune_inplace(
     (gate/up rows + down cols), per layer. Because CoCurve's attention unit
     is a whole KV-aligned group, num_key_value_groups is preserved and the GQA
     head-count is re-inferred from the (smaller) projection shapes — so this is
-    bit-for-bit equivalent to runtime masking while doing strictly less compute.
+    functionally equivalent to runtime masking, up to floating-point arithmetic,
+    while doing strictly less compute.
 
     This mutation is irreversible; use on a freshly loaded bundle.
     """
     layers = layer_modules(bundle)
+    # Refuse unsupported whole-attention removal before mutating any layer.
+    for layer_idx, specs in units_by_layer.items():
+        if specs and not any(spec.unit_id in selected_unit_ids for spec in specs):
+            raise ValueError(f"Whole-attention removal at layer {layer_idx} is not supported.")
     head_dim = bundle.head_dim
     info: Dict[str, object] = {"layers": []}
 
@@ -310,7 +329,11 @@ def apply_structural_prune_inplace(
                     start = int(spec.metadata["start_channel"]); size = int(spec.metadata["group_size"])
                     keep_channels.extend(range(start, start + size))
             keep_channels = sorted(set(keep_channels))
-            if keep_channels and len(keep_channels) < bundle.intermediate_size:
+            if not keep_channels and down_proj is not None:
+                name = next(name for name, child in layer.named_children() if child is mlp)
+                setattr(layer, name, ResidualConstantFFN(down_proj.bias))
+                layer_info["kept_ffn_channels"] = 0
+            elif len(keep_channels) < bundle.intermediate_size:
                 if down_proj is not None and up_proj is not None:
                     # Separate gate/up/down (SwiGLU). up/gate produce intermediate channels
                     # (rows); down consumes them (cols).
