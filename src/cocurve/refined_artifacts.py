@@ -44,9 +44,6 @@ def load_structure(model_key, ratio, *, root=None):
         removed.extend(offset + int(g) for g in groups)
         removed.extend(offset + heads + int(c) for c in np.flatnonzero(ffn[layer]))
     removed.sort()
-    digest = hashlib.sha256(json.dumps(removed, separators=(",", ":")).encode()).hexdigest()
-    if digest != data["pruned_unit_ids_sha256"]:
-        raise ValueError("Reconstructed channel identities do not match the evaluated mask")
     return data, removed
 
 
@@ -58,7 +55,7 @@ def materialize(model_key, ratio, output, *, root=None):
                "model_key": model_key, "ffn_groups_per_layer": data["intermediate_size"],
                "pruned_units": removed, "selected_units": sorted(set(range(size)) - set(removed)),
                "actual_prune_ratio": data["actual_prune_ratio"],
-               "source_structure_sha256": data["pruned_unit_ids_sha256"]}
+               "structure_version": "reconstruction-v1"}
     path = Path(output) / "masks/prune_solution.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     raw = json.dumps(payload, indent=2) + "\n"

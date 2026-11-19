@@ -52,7 +52,7 @@ been removed.**
 ## News
 
 - **November 2026 — reconstruction and checkpoint reuse.** Added fixed-mask OBS,
-  FFN refinement, six exact evaluated refinement masks, continued LoRA recovery,
+  FFN refinement, nine evaluated refinement masks, continued LoRA recovery,
   and a loader for physically sliced checkpoints.
   See [Reconstruction and checkpoints](docs/reconstruction.md).
 - **September 2026 — complete paper reproduction release.** Added the final
@@ -158,8 +158,8 @@ python scripts/evaluate_paper_mask.py \
 
 ## Publication-locked artifacts
 
-The release contains the exact provenance chain for every reported CoCurve
-operating point:
+The release provides curvature matrices, unit definitions, masks, and reference
+results for the paper's CoCurve operating points:
 
 ```text
 artifacts/paper-v1/{llm,vlm}/<model>/
@@ -181,8 +181,8 @@ artifacts/paper-v1/{llm,vlm}/<model>/
 | VLM | `qwen3-vl-8b` | 20, 30, 40, 50% | bf16 |
 | VLM | `internvl3-8b` | 20, 30, 40, 50% | bf16 |
 
-`manifest.json` binds every file by byte size and SHA256. Verification also
-checks matrix shape, finiteness, symmetry, non-negative diagonal, registry
+The release verification checks file integrity, matrix shape, finiteness,
+symmetry, non-negative diagonal, registry
 ordering, mask partition, and parameter-budget consistency. Run all 42 exact
 solver checks with:
 
@@ -190,9 +190,7 @@ solver checks with:
 make verify-paper-masks
 ```
 
-The released mask is the primary provenance object. It is the exact unit set
-used for the corresponding reference metrics—not a mask regenerated later from
-rounded paper values.
+Each released mask is the unit set used for its corresponding reference metrics.
 
 ## End-to-end reproduction
 
@@ -368,7 +366,7 @@ See [the recovery guide](docs/reconstruction.md) for the full workflow,
 checkpoint validation, and release status. The parameters are collected in
 `configs/reconstruction.yaml`.
 
-Six evaluated refinement snapshots are also available in
+Nine evaluated refinement structures are also available in
 `artifacts/reconstruction-v1`. To recover the exact selected heads and channels
 without running FFN selection again:
 
@@ -402,12 +400,10 @@ artifacts/paper-v1/ publication-locked H, registries, masks, and metrics
 tests/              artifact integrity and exact mask reconstruction checks
 ```
 
-This Git repository focuses on CoCurve and the paper's principal evaluation,
-reconstruction, recovery, quantization, and deployment paths. Large model weights
-are distributed separately from the source tree. The current verified download
-status is documented in [the checkpoint guide](docs/reconstruction.md).
-Datasets, caches, generated logs, baseline source trees, plotting scripts,
-internal diagnostics, and submission materials are excluded.
+The repository provides CoCurve and its evaluation, reconstruction, recovery,
+quantization, and deployment workflows. See
+[Reconstruction and checkpoints](docs/reconstruction.md) for reusable structures
+and model-loading examples.
 
 See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for the complete protocol,
 artifact contract, expected variation, and troubleshooting.

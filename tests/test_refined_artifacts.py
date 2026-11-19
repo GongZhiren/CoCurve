@@ -9,7 +9,7 @@ from cocurve.refined_artifacts import artifact_root, load_structure, materialize
 def test_evaluated_refinement_snapshots_preserve_original_allocation(tmp_path):
     root = artifact_root()
     manifest = json.loads((root / "manifest.json").read_text())
-    assert len(manifest["points"]) == 6
+    assert len(manifest["points"]) == 9
     paper = root.parent / "paper-v1/llm"
     for point in manifest["points"]:
         model, ratio = point["model_key"], point["ratio"]

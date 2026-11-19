@@ -122,7 +122,7 @@ structural speedup; only `physical_slice` does.
 - A mask is valid only for its exact model ID and registry.
 - `actual_prune_ratio` is recomputed from registry costs during release checks.
 - `reference_metrics.json` is a compact regression target, not an input.
-- `manifest.json` contains byte sizes and SHA256 checksums for every data file.
+- The artifact manifest supports automatic integrity checks for all released data.
 - `H.npy` is tracked with Git LFS. A tiny pointer file indicates an incomplete
   clone; run `git lfs pull`.
 

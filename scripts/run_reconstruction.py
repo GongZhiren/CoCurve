@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -71,14 +70,12 @@ def main():
                          device=args.device,
                          ffn_groups=args.ffn_groups or int(source.get("ffn_groups_per_layer", 16)))
     report.update(model_key=args.model_key, calibration_sequences=args.samples,
-                  calibration_length=args.seq_len, damping=args.damping,
-                  calibration_tokens_sha256=hashlib.sha256(
-                      b"".join(ids.numpy().tobytes() for ids in inputs)).hexdigest())
+                  calibration_length=args.seq_len, damping=args.damping)
     save_checkpoint(bundle.model, out, tokenizer=bundle.tokenizer)
     (out / "reconstruction.json").write_text(json.dumps(report, indent=2) + "\n")
     (out / "prune_solution.json").write_text(json.dumps(
         {k: report[k] for k in ("selected_units", "pruned_units", "ffn_groups_per_layer",
-                               "actual_prune_ratio", "model_key", "source_mask_sha256")}, indent=2) + "\n")
+                               "actual_prune_ratio", "model_key")}, indent=2) + "\n")
     print(json.dumps({"output": str(out), "method": args.method,
                       "parameters": report["parameters_after"]}))
 

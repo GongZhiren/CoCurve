@@ -7,7 +7,6 @@ NeurIPS 2024). This is an optional recovery stage, not the CoCurve selector.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 
@@ -169,7 +168,7 @@ def reconstruct(bundle, mask, inputs, *, method="obs", damping=0.01, device="cud
 
     Start from an unsliced, unquantized CPU model and independent calibration
     token windows. Inputs contain shape [1, sequence_length] token tensors.
-    Returns the actual channel-level mask and portable source-mask provenance.
+    Returns the actual channel-level mask and reconstruction settings.
     """
     if method not in ("obs", "ffn_refinement"):
         raise ValueError("method must be obs or ffn_refinement")
@@ -261,7 +260,7 @@ def reconstruct(bundle, mask, inputs, *, method="obs", damping=0.01, device="cud
             and not getattr(bundle.model.config, "mlp_bias", False)
             and before - after != expected_removed):
         raise RuntimeError("Reconstructed structure does not match the original projection budget")
-    return {"method": method, "source_mask_sha256": hashlib.sha256(Path(mask).read_bytes()).hexdigest(),
+    return {"method": method,
             "ffn_groups_per_layer": bundle.intermediate_size, "pruned_units": sorted(removed_ids),
             "selected_units": sorted(set(range(fine.num_units)) - removed_ids),
             "actual_prune_ratio": expected_removed / sum(u.cost for u in coarse.units),

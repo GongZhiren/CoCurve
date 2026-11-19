@@ -37,32 +37,62 @@
       "ratio": 50,
       "structure": "llm/llama-3.2-3b/r50/structure.json",
       "reference_avg12": 36.9
+    },
+    {
+      "model_key": "llama-3.1-8b-instruct",
+      "ratio": 50,
+      "structure": "llm/llama-3.1-8b-instruct/r50/structure.json",
+      "reference_avg12": 43.08
+    },
+    {
+      "model_key": "mistral-nemo-12b",
+      "ratio": 30,
+      "structure": "llm/mistral-nemo-12b/r30/structure.json",
+      "reference_avg12": 53.83
+    },
+    {
+      "model_key": "mistral-nemo-12b",
+      "ratio": 50,
+      "structure": "llm/mistral-nemo-12b/r50/structure.json",
+      "reference_avg12": 42.63
     }
   ],
   "files": {
     "llm/llama-3.1-8b-instruct/r30/structure.json": {
-      "bytes": 77684,
-      "sha256": "8c5f9c3e20ca3b524d172dbd3fb4bb71bf4d0c30c7b940e0e0db64bd29246b85"
+      "bytes": 77400,
+      "sha256": "014f7ecff58478b429693a7aaf4c278becf2d4866504c073307fee1b51dbd0e6"
     },
     "llm/llama-3.1-8b-instruct/r40/structure.json": {
-      "bytes": 77751,
-      "sha256": "d69df0e9bf2cb0fc32a8f0ecd69da75a8d5ca0ae29ddb9b78bedba3b3ffb9d2c"
+      "bytes": 77467,
+      "sha256": "fdc3f9fe19a1e0fa75d1c100b2f8c315eb757db99066c94a735e506bec4031dd"
     },
     "llm/mistral-nemo-12b/r40/structure.json": {
-      "bytes": 97256,
-      "sha256": "44566b7e0f015fa47723679ff6334ac9d8f3798d358917fb71fa77ea093425a0"
+      "bytes": 96972,
+      "sha256": "63973c94540b8681387348d4a04bd2d57453436cb66a2f30e62cd5b0e44a605a"
     },
     "llm/llama-3.2-3b/r30/structure.json": {
-      "bytes": 39459,
-      "sha256": "3f6c501c31ac1bb58a2485a9be41eb54338919aafcbf69ce215ad08334b46703"
+      "bytes": 39175,
+      "sha256": "42dd3592702b4bd041b75a108cc65bf3a6c5dbd81fb5e514ef7aa533fd19e602"
     },
     "llm/llama-3.2-3b/r40/structure.json": {
-      "bytes": 39764,
-      "sha256": "a967d1dc1a837dd678af6fc24a6d498c20322099e34b9dbc71185571d2a6e202"
+      "bytes": 39480,
+      "sha256": "62cd48d86408767f1fe48c4f54e48d35c69b9837b4a1ea3e14ac8c27561b85dd"
     },
     "llm/llama-3.2-3b/r50/structure.json": {
-      "bytes": 39802,
-      "sha256": "e86e28bc6ce5eb01c17471e9fb8fc5ed3cf5c630def37a884487061657031ffb"
+      "bytes": 39518,
+      "sha256": "03b192e99c64e7c0ed45e84b364dfec2aeff5f1646811ee90aad4f1c352cbf7b"
+    },
+    "llm/llama-3.1-8b-instruct/r50/structure.json": {
+      "bytes": 77593,
+      "sha256": "2cc2cc1867a8680136fbe51a90b4a11bfb427103b380fd6d2ed71e9d88731e93"
+    },
+    "llm/mistral-nemo-12b/r30/structure.json": {
+      "bytes": 96865,
+      "sha256": "9a8af5a74dc5b321817fcb3cc86345156ec987072d6b22063df53d293efde9f1"
+    },
+    "llm/mistral-nemo-12b/r50/structure.json": {
+      "bytes": 96633,
+      "sha256": "f2656ef0b698164f5b55d5d83609b72d238f4a2ebb90f98a6f3d0285fe4febc4"
     }
   }
 }

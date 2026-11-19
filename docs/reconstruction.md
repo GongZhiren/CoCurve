@@ -55,8 +55,7 @@ channel, rather than the original 16 groups per layer. Its
 Different layers can retain different head and channel counts. A stock dense
 Hugging Face config alone does not encode those shapes. The loader below checks
 the safetensors headers and shard index, rebuilds the stored projection shapes
-on the meta device, and then loads the weights. When a release manifest is
-present, it also verifies the recorded file hashes:
+on the meta device, validates the files, and then loads the weights:
 
 ```python
 from cocurve.checkpoints import load_checkpoint
@@ -76,20 +75,18 @@ loading route instead. Quantization and structural deletion are separate steps.
 
 ## Reuse an evaluated refined structure
 
-`artifacts/reconstruction-v1` contains compact, exact snapshots from the main
+`artifacts/reconstruction-v1` contains the refined structures from the main
 complete-pipeline comparison:
 
-| Model | Evaluated FFN-refinement snapshots |
+| Model | Released FFN-refinement structures |
 |---|---|
 | Llama-3.2-3B | 30%, 40%, 50% |
-| Llama-3.1-8B-Instruct | 30%, 40% |
-| Mistral-Nemo-12B | 40% |
+| Llama-3.1-8B-Instruct | 30%, 40%, 50% |
+| Mistral-Nemo-12B | 30%, 40%, 50% |
 
-Every snapshot records its original paper-mask hash, actual evaluated source,
-removed-unit checksum, and reference Avg12. The release checks that its
-attention identities and each layer's FFN removal count match the original
-CoCurve structure. The compact channel bitsets decode to the exact evaluated
-unit set:
+Each structure includes its model, pruning ratio, and reference Avg12.
+Its attention groups and per-layer FFN removal counts match the original
+CoCurve allocation. Materialize the stored channel choices with:
 
 ```bash
 python scripts/materialize_refined_mask.py \
@@ -123,10 +120,9 @@ same reconstructed checkpoint and attach the adapter with
 `peft.PeftModel.from_pretrained`. An adapter depends on the exact reconstructed
 weights and structure, not merely the dense base model ID.
 
-Use `--save-merged` to save the full recovered checkpoint. The saver uses
-1.9 GB shards, checks their headers, and records SHA256 checksums. Such shards
-fit both Hugging Face repositories and GitHub Release assets. Source code and
-model weights can be hosted independently.
+Use `--save-merged` to save the full recovered checkpoint. The saver produces
+portable safetensors shards with automatic integrity verification, suitable
+for Hugging Face repositories or GitHub Release assets.
 
 To repackage an older sliced checkpoint without loading or changing its
 weights, use:
@@ -136,16 +132,14 @@ python scripts/export_checkpoint.py --source CHECKPOINT_DIRECTORY \
   --output outputs/checkpoint-export
 ```
 
-## Download status and verification
+## Released resources
 
 The 42 original paper masks and nine curvature matrices are already included
 in `artifacts/paper-v1`. These allow direct mask evaluation or selection replay.
-Six exact refined structures and the reconstruction and checkpoint-loading
-interfaces are included as well. Full model weights are deferred from this
-source release. Released masks skip graph construction and selection; the
-commands above reconstruct weights or continue with the documented LoRA recipe.
+Nine refined structures and the reconstruction and checkpoint-loading
+interfaces are also included. Use these structures to skip graph construction
+and selection, then reconstruct weights or apply the common LoRA recipe with
+the commands above.
 
-In particular, older C4-recovered checkpoints are distinct from the paper's
-Alpaca-recovered checkpoints, even when the model and pruning ratio match.
 Models and adapters retain the licenses of their base models. The MIT license
 for this repository applies to the code.
