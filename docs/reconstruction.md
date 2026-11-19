@@ -74,6 +74,40 @@ The loader supports floating-point Llama/Mistral-style decoder checkpoints,
 including fully removed FFNs. Packed low-bit weights use their quantizer's
 loading route instead. Quantization and structural deletion are separate steps.
 
+## Reuse an evaluated refined structure
+
+`artifacts/reconstruction-v1` contains compact, exact snapshots from the main
+complete-pipeline comparison:
+
+| Model | Evaluated FFN-refinement snapshots |
+|---|---|
+| Llama-3.2-3B | 30%, 40%, 50% |
+| Llama-3.1-8B-Instruct | 30%, 40% |
+| Mistral-Nemo-12B | 40% |
+
+Every snapshot records its original paper-mask hash, actual evaluated source,
+removed-unit checksum, and reference Avg12. The release checks that its
+attention identities and each layer's FFN removal count match the original
+CoCurve structure. The compact channel bitsets decode to the exact evaluated
+unit set:
+
+```bash
+python scripts/materialize_refined_mask.py \
+  --model-key llama-3.1-8b-instruct --ratio 40 \
+  --output outputs/refined-mask-r40
+python scripts/run_reconstruction.py \
+  --model-key llama-3.1-8b-instruct \
+  --mask outputs/refined-mask-r40/masks/prune_solution.json \
+  --method obs --calibration data/calibration/reconstruction.jsonl \
+  --output outputs/refined-checkpoint-r40
+```
+
+Here OBS fixes the released refined channels. Using `ffn_refinement` on an
+original paper mask instead performs new FFN selection. Both preserve CoCurve's
+heads and per-layer quotas. The parameters for the complete-pipeline experiments
+are in `configs/reconstruction.yaml`; model weight recovery and training still
+require their calibration and recovery data.
+
 ## Continue with common LoRA
 
 ```bash
@@ -106,13 +140,10 @@ python scripts/export_checkpoint.py --source CHECKPOINT_DIRECTORY \
 
 The 42 original paper masks and nine curvature matrices are already included
 in `artifacts/paper-v1`. These allow direct mask evaluation or selection replay.
-The new reconstruction and checkpoint-loading interfaces are included here.
-
-Full model checkpoint downloads are being prepared separately; this repository
-does not yet advertise a verified weight download. Checkpoint publication
-requires complete shards, the exact source mask and recovery protocol, and a
-prediction check against the accepted evaluation record. A result JSON alone
-is not a downloadable model.
+Six exact refined structures and the reconstruction and checkpoint-loading
+interfaces are included as well. Full model weights are deferred from this
+source release. Released masks skip graph construction and selection; the
+commands above reconstruct weights or continue with the documented LoRA recipe.
 
 In particular, older C4-recovered checkpoints are distinct from the paper's
 Alpaca-recovered checkpoints, even when the model and pruning ratio match.

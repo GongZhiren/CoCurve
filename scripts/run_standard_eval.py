@@ -414,20 +414,22 @@ def evaluate_code_generation(bundle: ModelBundle, task: str, ds: Sequence[Any], 
 def maybe_register_mask(bundle: ModelBundle, cfg: Dict[str, Any], mask_run_dir: Optional[str]):
     if not mask_run_dir:
         return None
+    mask_path = Path(mask_run_dir) / "masks/prune_solution.json"
+    with mask_path.open("r", encoding="utf-8") as f:
+        solution = json.load(f)
     pruning_cfg = cfg["pruning"]
     registry = build_unit_registry(
         num_layers=bundle.num_layers,
         num_heads=bundle.num_heads,
         hidden_size=bundle.hidden_size,
         intermediate_size=bundle.intermediate_size,
-        ffn_groups_per_layer=int(pruning_cfg["units"]["ffn_groups_per_layer"]),
+        ffn_groups_per_layer=int(solution.get("ffn_groups_per_layer",
+                                            pruning_cfg["units"]["ffn_groups_per_layer"])),
         cost_type=str(pruning_cfg["units"]["cost_type"]),
         kv_heads=bundle.kv_heads,
         head_dim=bundle.head_dim,
     )
-    mask_path = Path(mask_run_dir) / "masks/prune_solution.json"
-    with mask_path.open("r", encoding="utf-8") as f:
-        selected_units = set(int(x) for x in json.load(f)["selected_units"])
+    selected_units = set(int(x) for x in solution["selected_units"])
     attn_by_layer: Dict[int, List[Any]] = {}
     ffn_by_layer: Dict[int, List[Any]] = {}
     for spec in registry.units:

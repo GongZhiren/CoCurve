@@ -52,8 +52,9 @@ been removed.**
 ## News
 
 - **November 2026 — reconstruction and checkpoint reuse.** Added fixed-mask OBS,
-  FFN refinement, continued LoRA recovery, and a loader for physically sliced
-  checkpoints. See [Reconstruction and checkpoints](docs/reconstruction.md).
+  FFN refinement, six exact evaluated refinement masks, continued LoRA recovery,
+  and a loader for physically sliced checkpoints.
+  See [Reconstruction and checkpoints](docs/reconstruction.md).
 - **September 2026 — complete paper reproduction release.** Added the final
   LLM/VLM implementation, all 42 publication masks and curvature matrices,
   direct evaluation, exact mask reconstruction, recovery and quantization
@@ -364,7 +365,21 @@ of evaluation data and contain enough text for 256 windows of 2,048 tokens.
 The output can be loaded directly with `cocurve.checkpoints.load_checkpoint`
 or passed to `run_lora_recovery.py --reconstructed-checkpoint`.
 See [the recovery guide](docs/reconstruction.md) for the full workflow,
-checkpoint validation, and release status.
+checkpoint validation, and release status. The parameters are collected in
+`configs/reconstruction.yaml`.
+
+Six evaluated refinement snapshots are also available in
+`artifacts/reconstruction-v1`. To recover the exact selected heads and channels
+without running FFN selection again:
+
+```bash
+python scripts/materialize_refined_mask.py \
+  --model-key llama-3.1-8b-instruct --ratio 40 \
+  --output outputs/llama8b-refined-mask-r40
+```
+
+The resulting mask records its channel-level unit inventory. The reconstruction,
+evaluation, and LoRA entry points read this metadata automatically.
 
 ### Quantized evaluation and common recovery
 

@@ -3,6 +3,8 @@
 ## 2026-11-19 — reconstruction and checkpoint reuse
 
 - Added fixed-mask OBS and FFN refinement as optional CoCurve recovery paths.
+- Added six exact evaluated FFN-refinement structures with source checksums,
+  original attention identity checks, and per-layer budget checks.
 - Added LoRA recovery starting from an already reconstructed checkpoint.
 - Added safe loading of heterogeneous sliced checkpoints and streaming export
   into checksummed 1.9 GB safetensors shards.

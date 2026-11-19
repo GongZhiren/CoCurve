@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 
 import torch
+import yaml
 
 from cocurve.checkpoints import save_checkpoint
 from cocurve.config import load_config, model_config
@@ -31,17 +32,24 @@ def packed_inputs(tokenizer, path, count, length):
 
 
 def main():
+    preliminary = argparse.ArgumentParser(add_help=False)
+    preliminary.add_argument("--reconstruction-config", default="configs/reconstruction.yaml")
+    known, _ = preliminary.parse_known_args()
+    protocol = yaml.safe_load(Path(known.reconstruction_config).read_text())
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reconstruction-config", default=known.reconstruction_config)
     parser.add_argument("--config", default="configs/paper.yaml")
     parser.add_argument("--model-key", required=True)
     parser.add_argument("--mask", required=True, help="CoCurve prune_solution.json")
-    parser.add_argument("--method", choices=("obs", "ffn_refinement"), default="obs")
+    parser.add_argument("--method", choices=("obs", "ffn_refinement"),
+                        default=protocol["reconstruction"]["method"])
     parser.add_argument("--calibration", required=True, help="Independent calibration JSONL (text field)")
-    parser.add_argument("--samples", type=int, default=256)
-    parser.add_argument("--seq-len", type=int, default=2048)
-    parser.add_argument("--damping", type=float, default=0.01)
-    parser.add_argument("--ffn-groups", type=int, default=16)
-    parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--samples", type=int, default=protocol["calibration"]["sequences"])
+    parser.add_argument("--seq-len", type=int, default=protocol["calibration"]["sequence_length"])
+    parser.add_argument("--damping", type=float, default=protocol["reconstruction"]["damping"])
+    parser.add_argument("--ffn-groups", type=int, default=None,
+                        help="infer from mask metadata, otherwise use 16")
+    parser.add_argument("--device", default=protocol["reconstruction"]["device"])
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     if args.samples < 1 or args.seq_len < 1:
@@ -60,7 +68,8 @@ def main():
     bundle = load_model_bundle(mc, cfg["model"].get("tokenizer", {}))
     inputs = packed_inputs(bundle.tokenizer, args.calibration, args.samples, args.seq_len)
     report = reconstruct(bundle, args.mask, inputs, method=args.method, damping=args.damping,
-                         device=args.device, ffn_groups=args.ffn_groups)
+                         device=args.device,
+                         ffn_groups=args.ffn_groups or int(source.get("ffn_groups_per_layer", 16)))
     report.update(model_key=args.model_key, calibration_sequences=args.samples,
                   calibration_length=args.seq_len, damping=args.damping,
                   calibration_tokens_sha256=hashlib.sha256(

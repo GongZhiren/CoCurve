@@ -1,0 +1,28 @@
+# Recovery protocol for the complete CoCurve pipelines.
+# CLI options override calibration and reconstruction defaults.
+calibration:
+  dataset: allenai/c4
+  configuration: en
+  split: train
+  seed: 20261107
+  sequences: 256
+  sequence_length: 2048
+
+reconstruction:
+  method: obs
+  damping: 0.01
+  device: cuda:0
+  original_ffn_groups_per_layer: 16
+
+# run_lora_recovery.py exposes these same defaults as command-line options.
+common_lora:
+  dataset: yahma/alpaca-cleaned
+  epochs: 1
+  sequence_length: 1024
+  batch_size: 2
+  gradient_accumulation: 8
+  rank: 16
+  alpha: 32
+  dropout: 0.0
+  learning_rate: 0.0001
+  seed: 0

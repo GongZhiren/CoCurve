@@ -213,18 +213,21 @@ def main() -> None:
         bundle = load_model_bundle(model_config(cfg), cfg["model"].get("tokenizer", {}))
     device = bundle_device(bundle)
     tok = bundle.tokenizer
+    solution = {}
+    if args.mask_run_dir:
+        solution = json.loads((Path(args.mask_run_dir) / "masks/prune_solution.json").read_text())
 
     registry = build_unit_registry(
         num_layers=bundle.num_layers, num_heads=bundle.num_heads,
         hidden_size=bundle.hidden_size, intermediate_size=bundle.intermediate_size,
-        ffn_groups_per_layer=int(cfg["pruning"]["units"]["ffn_groups_per_layer"]),
+        ffn_groups_per_layer=int(solution.get("ffn_groups_per_layer",
+                                            cfg["pruning"]["units"]["ffn_groups_per_layer"])),
         cost_type=str(cfg["pruning"]["units"]["cost_type"]), kv_heads=bundle.kv_heads, head_dim=bundle.head_dim)
     attn_by_layer, ffn_by_layer = {}, {}
     for s in registry.units:
         (attn_by_layer if s.unit_type == "attn_head" else ffn_by_layer) \
             .setdefault(s.layer_idx, []).append(s)
     if args.mask_run_dir:
-        solution = json.loads((Path(args.mask_run_dir) / "masks/prune_solution.json").read_text())
         pruned = set(solution["pruned_units"])
         kept = set(range(len(registry.units))) - pruned
     n0 = sum(p.numel() for p in bundle.model.parameters())
